@@ -59,5 +59,5 @@ def authenticate_user(db: Session, email: str, password: str):
         logger.info("Mot de passe invalide.")
         return False
 
-    logger.info(f"Utilisateur authentifié avec succès")
+    logger.info("Utilisateur authentifié avec succès")
     return user

@@ -56,7 +56,7 @@ def test_user(db):
     return user
 
 
-### 🔹 TESTS
+# 🔹 TESTS
 
 
 def test_get_user_by_email_found(db, test_user):
