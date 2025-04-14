@@ -1,4 +1,5 @@
 import pytest
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import timedelta
@@ -12,7 +13,7 @@ from modules.api.users.functions import (
 )
 
 # Setup variables d'env
-SECRET_KEY = "testsecretkey"
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
 # Configuration DB de test (SQLite in-memory)
