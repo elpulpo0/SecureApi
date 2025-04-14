@@ -14,8 +14,7 @@ logger = configure_logger()
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
-ALGORITHM = "HS256"  # Algorithme de codage pour JWT
+ALGORITHM = "HS256"
 
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
@@ -23,7 +22,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     expire = datetime.now(timezone.utc) + (
         expires_delta
         if expires_delta
-        else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        else timedelta(minutes=60)
     )
     to_encode.update({"exp": expire})
 

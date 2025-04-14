@@ -22,8 +22,6 @@
 
 ```sh
 SECRET_KEY= # Clé pour hasher les mot de passes
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 ADMIN_USERNAME=
 ADMIN_EMAIL=
