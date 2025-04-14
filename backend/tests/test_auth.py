@@ -12,7 +12,7 @@ from modules.api.users.functions import (
 )
 
 # Setup variables d'env
-SECRET_KEY = "test-secret-key"
+SECRET_KEY = "testsecretkey"
 ALGORITHM = "HS256"
 
 # Configuration DB de test (SQLite in-memory)
