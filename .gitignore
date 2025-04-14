@@ -1,0 +1,24 @@
+# Python
+*.pyc
+__pycache__/
+__init__.py
+*~ 
+
+# Environment
+.env
+
+# Misc
+.DS_Store
+.idea/
+.vscode/
+
+Local files/
+
+# Dockerfile
+.dockerignore
+
+# Environnement virtuel
+.venv/
+
+# Fichiers générés
+backend/db/*

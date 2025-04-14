@@ -1,0 +1,27 @@
+## Créer un environement virtuel
+
+```python -m venv .venv```
+
+## Activer l'environement virtuel (avec Bash)
+
+```source .venv/Scripts/activate```
+
+## Installer les dépendances
+
+```pip install --upgrade pip```
+
+```pip install -r requirements.txt```
+
+### Si le fichier requirements n'est pas disponible:
+
+```pip install fastapi uvicorn pydantic loguru bcrypt openpyxl python-jose python-dotenv SQLAlchemy python-multipart pydantic[email]```
+
+```pip freeze > requirements.txt```
+
+### Mettre à jour le template pour ajouter une base de donnée (Optionnel)
+
+Dans `backend\modules\database\config.py`, `backend\modules\database\dependancies.py` et `backend\modules\database\session.py`, ajoutez la deuxième base de donnée pour correspondre au projet actuel, créez un dossier dédié à cette base de donnée en parralèle du dossier users et ensuite ajustez les imports correspondants dans `backend\modules\api\main.py`
+
+## Lancer le backend
+
+```uvicorn modules.api.main:app --reload```
