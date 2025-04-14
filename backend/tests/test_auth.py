@@ -4,9 +4,9 @@ from sqlalchemy.orm import sessionmaker
 from datetime import timedelta
 from jose import jwt
 import os
-from ..modules.api.users.create_db import Base, User
+from modules.api.users.create_db import Base, User
 from utils.security import hash_password, anonymize
-from ..modules.api.users.functions import (
+from modules.api.users.functions import (
     create_access_token,
     authenticate_user,
     get_user_by_email,
