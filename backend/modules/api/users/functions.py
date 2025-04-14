@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from modules.api.users.create_db import User
 from utils.security import verify_password, anonymize
 from sqlalchemy.orm import Session
@@ -13,18 +13,17 @@ logger = configure_logger()
 # Charger les variables d'environnement
 load_dotenv()
 
-# Vérifier si la clé secrète est bien définie dans les variables d'environnement
 SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    raise ValueError("SECRET_KEY est absent dans les variables d'environnement.")
-
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 ALGORITHM = "HS256"  # Algorithme de codage pour JWT
 
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
-    expire = datetime.utcnow() + (
-        expires_delta if expires_delta else timedelta(minutes=15)
+    expire = datetime.now(timezone.utc) + (
+        expires_delta
+        if expires_delta
+        else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     to_encode.update({"exp": expire})
 
