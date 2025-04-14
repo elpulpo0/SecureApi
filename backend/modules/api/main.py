@@ -12,7 +12,9 @@ frontend_url = os.getenv("FRONTEND_URL")
 
 init_users_db()
 
-app = FastAPI(title="SecureAPI", description="Cours Simplon: Fast API Sécurité", version="1.0.0")
+app = FastAPI(
+    title="SecureAPI", description="Cours Simplon: Fast API Sécurité", version="1.0.0"
+)
 
 # Ajouter le middleware CORS
 app.add_middleware(
@@ -31,6 +33,7 @@ router = APIRouter()
 router.include_router(users_router)
 
 app.include_router(router)
+
 
 @app.get("/", include_in_schema=False)
 async def root():

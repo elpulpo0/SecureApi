@@ -14,6 +14,7 @@ logger = configure_logger()
 # Charger les variables d'environnement
 load_dotenv()
 
+
 def init_users_db():
     """Vérifie si la base de données existe et crée l'admin si besoin."""
     db_exists = USERS_DATABASE_PATH.exists()
@@ -24,7 +25,10 @@ def init_users_db():
         logger.info("Base de données 'users' créée avec succès.")
         create_first_users()
     else:
-        logger.info("La base de données 'users' existe déjà. Aucun changement nécessaire.")
+        logger.info(
+            "La base de données 'users' existe déjà. Aucun changement nécessaire."
+        )
+
 
 def create_first_users():
     """Crée un administrateur et des éditeurs avec les informations du fichier .env."""
@@ -42,7 +46,12 @@ def create_first_users():
 
         # Création des utilisateurs
         users = [
-            User(email=anonymize(admin_email), password=hash_password(admin_password), role="admin", is_active=True),
+            User(
+                email=anonymize(admin_email),
+                password=hash_password(admin_password),
+                role="admin",
+                is_active=True,
+            ),
         ]
 
         for user in users:
