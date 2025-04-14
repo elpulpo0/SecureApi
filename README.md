@@ -23,7 +23,6 @@
 ```sh
 SECRET_KEY= # Clé pour hasher les mot de passes
 
-ADMIN_USERNAME=
 ADMIN_EMAIL=
 ADMIN_PASSWORD=
 ```
