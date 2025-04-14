@@ -3,7 +3,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import timedelta
 from jose import jwt
-import os
 from modules.api.users.create_db import Base, User
 from utils.security import hash_password, anonymize
 from modules.api.users.functions import (
