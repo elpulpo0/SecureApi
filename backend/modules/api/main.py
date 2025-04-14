@@ -7,8 +7,6 @@ from modules.api.users.routes import users_router
 
 from modules.api.users.create_db import init_users_db
 
-# Charger l'URL du frontend à partir de l'environnement
-frontend_url = os.getenv("FRONTEND_URL")
 
 init_users_db()
 
@@ -22,8 +20,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        frontend_url,
-        "http://localhost:5173",
+        "http://localhost:5173",  # Port par défaut pour VueJs
+        "http://localhost:8501",  # Port par défaut pour Streamlit
     ],
     allow_credentials=True,
     allow_methods=["*"],  # Autoriser toutes les méthodes (GET, POST, etc.)

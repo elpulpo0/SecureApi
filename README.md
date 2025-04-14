@@ -18,6 +18,18 @@
 
 ```pip freeze > requirements.txt```
 
+### Copier et éditer le fichier .env_example en .env
+
+```sh
+SECRET_KEY= # Clé pour hasher les mot de passes
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+
+ADMIN_USERNAME=
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+```
+
 ### Mettre à jour le template pour ajouter une base de donnée (Optionnel)
 
 Dans `backend\modules\database\config.py`, `backend\modules\database\dependancies.py` et `backend\modules\database\session.py`, ajoutez la deuxième base de donnée pour correspondre au projet actuel, créez un dossier dédié à cette base de donnée en parralèle du dossier users et ensuite ajustez les imports correspondants dans `backend\modules\api\main.py`
