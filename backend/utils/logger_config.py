@@ -8,7 +8,11 @@ def configure_logger():
     logger.add(
         sink=sys.stderr,
         level="DEBUG",
-        format="<cyan>{time:YYYY-MM-DD HH:mm:ss}</cyan> | <blue>{name}</blue> | <green>{level}</green> | <magenta>{message}</magenta>",
+        format=""
+        "<cyan>{time:YYYY-MM-DD HH:mm:ss}</cyan> | "
+        "<blue>{name}</blue> | "
+        "<green>{level}</green> | "
+        "<magenta>{message}</magenta>",
     )
 
     return logger
