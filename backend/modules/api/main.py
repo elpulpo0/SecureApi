@@ -13,7 +13,9 @@ frontend_url = os.getenv("FRONTEND_URL")
 init_users_db()
 
 app = FastAPI(
-    title="SecureAPI", description="Cours Simplon: Fast API Sécurité", version="1.0.0"
+    title="SecureAPI",
+    description="Cours Simplon: Fast API Sécurité",
+    version="1.0.0",
 )
 
 # Ajouter le middleware CORS

@@ -20,7 +20,9 @@ def init_users_db():
     db_exists = USERS_DATABASE_PATH.exists()
 
     if not db_exists:
-        logger.info("La base de données 'users' n'existe pas. Création en cours...")
+        logger.info(
+            "La base de données 'users' n'existe pas. Création en cours..."
+        )
         Base.metadata.create_all(bind=users_engine)
         logger.info("Base de données 'users' créée avec succès.")
         create_first_users()
@@ -37,7 +39,9 @@ def create_first_users():
     try:
         existing_admin = db.query(User).filter(User.role == "admin").first()
         if existing_admin:
-            logger.info("Un administrateur existe déjà. Aucune action nécessaire.")
+            logger.info(
+                "Un administrateur existe déjà. Aucune action nécessaire."
+            )
             return
 
         # Récupération depuis le .env
@@ -58,11 +62,15 @@ def create_first_users():
             db.add(user)
             db.commit()
             db.refresh(user)
-            logger.info(f"{user.role.capitalize()} {admin_email} créé avec succès.")
+            logger.info(
+                f"{user.role.capitalize()} {admin_email} créé avec succès."
+            )
 
     except Exception as e:
         db.rollback()
-        logger.error(f"Erreur lors de la création des utilisateurs initiaux : {e}")
+        logger.error(
+            f"Erreur lors de la création des utilisateurs initiaux : {e}"
+        )
 
     finally:
         db.close()

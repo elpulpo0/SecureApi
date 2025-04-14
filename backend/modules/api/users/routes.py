@@ -77,7 +77,10 @@ def read_users_me(
     try:
         # Décoder le token pour vérifier la validité et l'expiration
         payload = jwt.decode(
-            token, SECRET_KEY, algorithms=[ALGORITHM], options={"verify_exp": True}
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM],
+            options={"verify_exp": True},
         )
         anonymized_email: str = payload.get(
             "sub"
@@ -136,7 +139,9 @@ def get_all_users(
         requesting_user = get_user_by_email(email, db)
 
         if not requesting_user:
-            raise HTTPException(status_code=401, detail="Utilisateur non trouvé.")
+            raise HTTPException(
+                status_code=401, detail="Utilisateur non trouvé."
+            )
 
         if requesting_user.role != "admin":
             raise HTTPException(
@@ -147,7 +152,9 @@ def get_all_users(
         return db.query(User).all()
 
     except JWTError:
-        raise HTTPException(status_code=401, detail="Token invalide ou expiré.")
+        raise HTTPException(
+            status_code=401, detail="Token invalide ou expiré."
+        )
 
 
 @users_router.delete(
@@ -171,7 +178,9 @@ def delete_user(
         requesting_user = get_user_by_email(email, db)
 
         if not requesting_user:
-            raise HTTPException(status_code=401, detail="Utilisateur non trouvé.")
+            raise HTTPException(
+                status_code=401, detail="Utilisateur non trouvé."
+            )
 
         # Vérifier que l'utilisateur est un admin
         if requesting_user.role != "admin":
@@ -183,7 +192,9 @@ def delete_user(
         # Suppression de l'utilisateur
         user_to_delete = db.query(User).filter(User.id == user_id).first()
         if not user_to_delete:
-            raise HTTPException(status_code=404, detail="Utilisateur non trouvé.")
+            raise HTTPException(
+                status_code=404, detail="Utilisateur non trouvé."
+            )
 
         db.delete(user_to_delete)
         db.commit()
@@ -191,7 +202,9 @@ def delete_user(
         return {"message": "Utilisateur supprimé"}
 
     except JWTError:
-        raise HTTPException(status_code=401, detail="Token invalide ou expiré.")
+        raise HTTPException(
+            status_code=401, detail="Token invalide ou expiré."
+        )
 
 
 @users_router.post(
@@ -209,7 +222,8 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_users_db)):
     existing_user = get_user_by_email(user_data.email, db)
     if existing_user:
         raise HTTPException(
-            status_code=400, detail="Un utilisateur avec cet email existe déjà"
+            status_code=400,
+            detail="Un utilisateur avec cet email existe déjà",
         )
 
     # Créer un nouvel utilisateur

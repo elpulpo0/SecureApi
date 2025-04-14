@@ -22,7 +22,9 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine
+)
 
 
 # Fixture de base de données
@@ -43,7 +45,10 @@ def test_user(db):
     hashed_password = hash_password(password)
 
     user = User(
-        email=anonymize(email), password=hashed_password, role="user", is_active=True
+        email=anonymize(email),
+        password=hashed_password,
+        role="user",
+        is_active=True,
     )
     db.add(user)
     db.commit()
