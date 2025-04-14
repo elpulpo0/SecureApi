@@ -28,7 +28,7 @@ jobs:
 
     - name: Format code with black
       run:  |
-        black --line-length 120 .
+        black --line-length 78 .
 
     - name: Lint with flake8
       run: |
