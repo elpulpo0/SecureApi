@@ -21,7 +21,7 @@
 ### Copier et éditer le fichier .env_example en .env
 
 ```sh
-SECRET_KEY= # Clé pour hasher les mot de passes
+SECRET_KEY= # Clé pour hasher les mots de passe
 
 ADMIN_EMAIL=
 ADMIN_PASSWORD=
