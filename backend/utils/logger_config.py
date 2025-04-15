@@ -1,18 +1,42 @@
 from loguru import logger
 import sys
+import os
 
 
 def configure_logger():
     logger.remove()
 
-    logger.add(
-        sink=sys.stderr,
-        level="DEBUG",
-        format=""
+    # Créer un dossier de logs s'il n'existe pas
+    log_dir = "logs"
+    os.makedirs(log_dir, exist_ok=True)
+
+    log_format = (
         "<cyan>{time:YYYY-MM-DD HH:mm:ss}</cyan> | "
         "<blue>{name}</blue> | "
         "<green>{level}</green> | "
-        "<magenta>{message}</magenta>",
+        "<magenta>{message}</magenta>"
+    )
+
+    # Console
+    logger.add(sys.stderr, level="DEBUG", format=log_format)
+
+    # Fichier général (tous les logs)
+    logger.add(
+        f"{log_dir}/app.log",
+        rotation="1 week",
+        retention="1 month",
+        level="INFO",
+        format=log_format,
+    )
+
+    # Fichier uniquement pour ERROR
+    logger.add(
+        f"{log_dir}/error.log",
+        level="ERROR",
+        filter=lambda record: record["level"].name == "ERROR",
+        rotation="500 KB",
+        retention="10 days",
+        format=log_format,
     )
 
     return logger
