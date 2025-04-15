@@ -21,7 +21,6 @@ logger = configure_logger()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 180
 
 # Gestion de l'authentification avec OAuth2
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -50,11 +49,43 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=15)
+    refresh_token_expires = timedelta(days=7)
+
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    refresh_token = create_access_token(
+        data={"sub": user.email, "type": "refresh"},
+        expires_delta=refresh_token_expires,
+    )
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+    }
+
+
+@auth_router.post("/refresh")
+def refresh_token(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        token_type = payload.get("type")
+        if token_type != "refresh":
+            raise HTTPException(
+                status_code=401, detail="Token invalide pour rafraîchissement"
+            )
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Token non valide")
+
+    # On recrée un nouvel access token court
+    new_access_token = create_access_token(
+        data={"sub": email}, expires_delta=timedelta(minutes=15)
+    )
+    return {"access_token": new_access_token, "token_type": "bearer"}
 
 
 @auth_router.get(
