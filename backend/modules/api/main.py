@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
 from modules.api.users.routes import users_router
+from modules.api.auth.routes import auth_router
 from modules.api.users.create_db import init_users_db
 
 # Initialisation de la base de données utilisateurs
@@ -28,8 +29,9 @@ app.add_middleware(
 
 router = APIRouter()
 
-# Inclusion des routes existantes (ici, les routes liées aux utilisateurs)
+# Inclusion des routes existantes
 router.include_router(users_router)
+router.include_router(auth_router)
 
 # Inclusion du router dans l'application principale
 app.include_router(router)
