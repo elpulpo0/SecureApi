@@ -95,26 +95,6 @@ def test_create_access_token():
     assert "exp" in decoded
 
 
-def test_refresh_token_generation():
-    # Générer un refresh token avec type "refresh"
-    email = "refresh@example.com"
-    data = {"sub": email, "type": "refresh"}
-    refresh_token = create_access_token(data, expires_delta=timedelta(days=7))
-
-    # Décoder et valider manuellement (ce que ferait la route /refresh)
-    decoded = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
-    assert decoded["sub"] == email
-    assert decoded["type"] == "refresh"
-
-    # Simuler la génération d'un nouveau token
-    new_access_token = create_access_token(
-        data={"sub": decoded["sub"]}, expires_delta=timedelta(minutes=15)
-    )
-    new_decoded = jwt.decode(new_access_token, SECRET_KEY, algorithms=[ALGORITHM])
-    assert new_decoded["sub"] == email
-    assert "exp" in new_decoded
-
-
 def test_refresh_route_works():
     # Générer un refresh token valide
     email = "testrefresh@example.com"
