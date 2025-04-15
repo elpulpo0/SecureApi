@@ -46,7 +46,7 @@ def test_user(db):
     user = User(
         email=anonymize(email),
         password=hashed_password,
-        role="user",
+        role_id="user",
         is_active=True,
     )
     db.add(user)
