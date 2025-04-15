@@ -15,12 +15,12 @@ from modules.api.users.functions import (
 )
 from utils.logger_config import configure_logger
 from modules.database.dependencies import get_users_db
+from modules.api.users.models import Role
 
 load_dotenv()  # Charge les variables d'environnement depuis .env
 
 # Configuration du logger
 logger = configure_logger()
-
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 180
@@ -99,7 +99,13 @@ def read_users_me(
             logger.error("Utilisateur non trouvé.")
             raise credentials_exception
 
-        return user
+        return UserResponse(
+            id=user.id,
+            name=user.name,
+            email=user.email,
+            is_active=user.is_active,
+            role=user.role.role
+        )
 
     except JWTError as e:
         # Log d'erreur si le token est invalide ou expiré
@@ -143,13 +149,24 @@ def get_all_users(
                 status_code=401, detail="Utilisateur non trouvé."
             )
 
-        if requesting_user.role != "admin":
+        # ✅ Correction ici : comparaison avec le nom du rôle
+        if requesting_user.role.role != "admin":
             raise HTTPException(
                 status_code=403,
                 detail="Accès refusé : réservé aux administrateurs.",
             )
 
-        return db.query(User).all()
+        # ✅ Renvoi formaté pour Pydantic
+        return [
+            UserResponse(
+                id=u.id,
+                name=u.name,
+                email=u.email,
+                is_active=u.is_active,
+                role=u.role.role
+            )
+            for u in db.query(User).all()
+        ]
 
     except JWTError:
         raise HTTPException(
@@ -219,18 +236,25 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_users_db)):
     """Créer un nouvel utilisateur avec email, mot de passe et rôle."""
 
     # Vérifier si l'utilisateur existe déjà
-    existing_user = get_user_by_email(user_data.email, db)
+    anonymized_email = anonymize(user_data.email)
+    existing_user = get_user_by_email(anonymized_email, db)
     if existing_user:
         raise HTTPException(
             status_code=400,
             detail="Un utilisateur avec cet email existe déjà",
         )
 
+    # Récupérer le rôle par défaut
+    role_obj = db.query(Role).filter_by(role="reader").first()
+    if not role_obj:
+        raise HTTPException(status_code=500, detail="Le rôle 'reader' est introuvable")
+
     # Créer un nouvel utilisateur
     new_user = User(
-        email=anonymize(user_data.email),
+        email=anonymized_email,
+        name=user_data.name,
         password=hash_password(user_data.password),
-        role="reader",
+        role_id=role_obj.id,
         is_active=True,
     )
 
@@ -238,7 +262,13 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_users_db)):
     db.commit()
     db.refresh(new_user)
 
-    return new_user
+    return UserResponse(
+        id=new_user.id,
+        name=new_user.name,
+        email=new_user.email,
+        is_active=new_user.is_active,
+        role=new_user.role.role
+    )
 
 
 @users_router.patch(

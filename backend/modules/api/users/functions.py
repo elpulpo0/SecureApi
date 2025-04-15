@@ -2,10 +2,14 @@ from datetime import datetime, timedelta, timezone
 from modules.api.users.create_db import User
 from utils.security import verify_password, anonymize
 from sqlalchemy.orm import Session
+from modules.database.dependencies import get_users_db
+from fastapi import Depends
+from modules.api.users.models import Role
 from jose import jwt
 import os
 from dotenv import load_dotenv
 from utils.logger_config import configure_logger
+
 
 # Configuration du logger
 logger = configure_logger()

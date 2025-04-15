@@ -40,11 +40,13 @@ def db():
 @pytest.fixture
 def test_user(db):
     email = "test@example.com"
+    name = "test"
     password = "testpass123"
     hashed_password = hash_password(password)
 
     user = User(
         email=anonymize(email),
+        name=name,
         password=hashed_password,
         role_id="user",
         is_active=True,

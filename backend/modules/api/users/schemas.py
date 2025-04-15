@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr, constr
 # Modèle Pydantic pour validation
 class UserCreate(BaseModel):
     email: EmailStr
+    name: str
     password: str
 
 
@@ -11,15 +12,17 @@ class UserCreate(BaseModel):
 class UserResponse(BaseModel):
     id: int
     email: constr(min_length=1)  # type: ignore
+    name: str
     is_active: bool
     role: str
 
     class Config:
         from_attributes = True
 
+
 # Modèle pour mettre à jour un rôle
 class RoleUpdate(BaseModel):
-    role: str
+    role_id: str
 
 
 class Token(BaseModel):
