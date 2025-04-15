@@ -10,10 +10,11 @@ def configure_logger():
     log_dir = "logs"
     os.makedirs(log_dir, exist_ok=True)
 
+    # Format de log avec une coloration automatique des niveaux grâce à la balise <level>
     log_format = (
         "<cyan>{time:YYYY-MM-DD HH:mm:ss}</cyan> | "
         "<blue>{name}</blue> | "
-        "<green>{level}</green> | "
+        "<level>{level}</level> | "
         "<magenta>{message}</magenta>"
     )
 
