@@ -13,6 +13,7 @@ from modules.api.users.schemas import UserResponse, UserCreate, RoleUpdate
 from modules.api.users.create_db import User, Role
 from modules.api.users.functions import get_user_by_email
 from modules.api.auth.security import anonymize, hash_password
+from fastapi.responses import JSONResponse
 
 load_dotenv()  # Charge les variables d'environnement depuis .env
 
@@ -53,7 +54,8 @@ def login_for_access_token(
     refresh_token_expires = timedelta(days=7)
 
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user.email, "role": user.role.role},
+        expires_delta=access_token_expires,
     )
 
     refresh_token = create_access_token(
@@ -61,18 +63,26 @@ def login_for_access_token(
         expires_delta=refresh_token_expires,
     )
 
-    return {
+    return JSONResponse({
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
-    }
+    })
 
 
-@auth_router.post("/refresh")
+@auth_router.post(
+    "/refresh",
+    response_model=Token,
+    summary="Rafraîchir un token JWT d'accès",
+    description="Permet de générer un nouveau token d'accès à partir d'un token de rafraîchissement valide. "
+    "Le token de rafraîchissement doit contenir le type 'refresh' pour être accepté.",
+    tags=["Authentification"],
+)
 def refresh_token(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
+        role = payload.get("role")
         token_type = payload.get("type")
         if token_type != "refresh":
             raise HTTPException(
@@ -83,9 +93,9 @@ def refresh_token(token: str = Depends(oauth2_scheme)):
 
     # On recrée un nouvel access token court
     new_access_token = create_access_token(
-        data={"sub": email}, expires_delta=timedelta(minutes=15)
+        data={"sub": email, "role": role}, expires_delta=timedelta(minutes=15)
     )
-    return {"access_token": new_access_token, "token_type": "bearer"}
+    return JSONResponse ({"access_token": new_access_token, "token_type": "bearer"})
 
 
 @auth_router.get(
@@ -155,13 +165,9 @@ def get_all_users(
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")
-        requesting_user = get_user_by_email(email, db)
+        role = payload.get("role")
 
-        if not requesting_user:
-            raise HTTPException(status_code=401, detail="Utilisateur non trouvé.")
-
-        if requesting_user.role.role != "admin":
+        if role != "admin":
             raise HTTPException(
                 status_code=403,
                 detail="Accès refusé : réservé aux administrateurs.",
@@ -199,14 +205,10 @@ def delete_user(
     try:
         # Décodage du token JWT pour obtenir l'email de l'utilisateur qui fait la requête
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")
-        requesting_user = get_user_by_email(email, db)
-
-        if not requesting_user:
-            raise HTTPException(status_code=401, detail="Utilisateur non trouvé.")
+        role = payload.get("role")
 
         # Vérifier que l'utilisateur est un admin
-        if requesting_user.role.role != "admin":
+        if role != "admin":
             raise HTTPException(
                 status_code=403,
                 detail="Accès refusé : réservé aux administrateurs.",
@@ -220,7 +222,7 @@ def delete_user(
         db.delete(user_to_delete)
         db.commit()
 
-        return {"message": "Utilisateur supprimé"}
+        return JSONResponse({"message": "Utilisateur supprimé"})
 
     except JWTError:
         raise HTTPException(status_code=401, detail="Token invalide ou expiré.")
@@ -288,13 +290,9 @@ def update_user_role(
     try:
         # Authentifier l'utilisateur qui fait la demande
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")
-        requesting_user = get_user_by_email(email, db)
+        role = payload.get("role")
 
-        if not requesting_user:
-            raise HTTPException(status_code=401, detail="Utilisateur non trouvé.")
-
-        if requesting_user.role.role != "admin":
+        if role != "admin":
             raise HTTPException(
                 status_code=403, detail="Accès refusé : réservé aux administrateurs."
             )
@@ -316,7 +314,7 @@ def update_user_role(
         db.commit()
         db.refresh(user)
 
-        return {"message": f"Rôle de l'utilisateur mis à jour en '{new_role.role}'."}
+        return JSONResponse({"message": f"Rôle de l'utilisateur mis à jour en '{new_role.role}'."})
 
     except JWTError:
         raise HTTPException(status_code=401, detail="Token invalide ou expiré.")
