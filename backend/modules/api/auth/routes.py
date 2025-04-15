@@ -24,7 +24,13 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
 # Gestion de l'authentification avec OAuth2
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/login",
+    scopes={
+        "me": "Voir ses informations personnelles",
+        "admin": "Accès aux opérations administratives",
+    }
+)
 
 auth_router = APIRouter()
 
@@ -95,7 +101,7 @@ def refresh_token(token: str = Depends(oauth2_scheme)):
     new_access_token = create_access_token(
         data={"sub": email, "role": role}, expires_delta=timedelta(minutes=15)
     )
-    return JSONResponse ({"access_token": new_access_token, "token_type": "bearer"})
+    return JSONResponse({"access_token": new_access_token, "token_type": "bearer"})
 
 
 @auth_router.get(
