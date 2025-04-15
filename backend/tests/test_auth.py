@@ -5,12 +5,9 @@ from sqlalchemy.orm import sessionmaker
 from datetime import timedelta
 from jose import jwt
 from modules.api.users.create_db import Base, User
-from backend.modules.api.auth.security import hash_password, anonymize
-from modules.api.users.functions import (
-    create_access_token,
-    authenticate_user,
-    get_user_by_email,
-)
+from modules.api.auth.security import hash_password, anonymize
+from modules.api.users.functions import get_user_by_email
+from modules.api.auth.functions import create_access_token, authenticate_user
 
 # Setup variables d'env
 SECRET_KEY = os.getenv("SECRET_KEY")

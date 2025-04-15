@@ -12,7 +12,7 @@ from jose import JWTError, jwt
 from modules.api.users.schemas import UserResponse, UserCreate, RoleUpdate
 from modules.api.users.create_db import User, Role
 from modules.api.users.functions import get_user_by_email
-from backend.modules.api.auth.security import anonymize, hash_password
+from modules.api.auth.security import anonymize, hash_password
 
 load_dotenv()  # Charge les variables d'environnement depuis .env
 

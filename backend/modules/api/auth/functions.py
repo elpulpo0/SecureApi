@@ -1,4 +1,4 @@
-from backend.modules.api.auth.security import verify_password, anonymize
+from modules.api.auth.security import verify_password, anonymize
 from datetime import datetime, timedelta, timezone
 from jose import jwt
 import os

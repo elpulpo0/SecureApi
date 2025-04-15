@@ -2,7 +2,7 @@ import os
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 
-from backend.modules.api.auth.security import anonymize, hash_password
+from modules.api.auth.security import anonymize, hash_password
 from utils.logger_config import configure_logger
 from modules.api.users.models import User, Base, Role
 from modules.database.config import USERS_DATABASE_PATH
