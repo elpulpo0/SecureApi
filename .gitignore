@@ -24,3 +24,4 @@ Local files/
 
 # Fichiers générés
 backend/db/*
+backend/logs/*

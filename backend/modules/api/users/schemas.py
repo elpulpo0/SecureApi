@@ -17,6 +17,10 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
+# Modèle pour mettre à jour un rôle
+class RoleUpdate(BaseModel):
+    role: str
+
 
 class Token(BaseModel):
     access_token: str
