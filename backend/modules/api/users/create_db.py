@@ -37,7 +37,7 @@ def create_first_users():
     db: Session = UsersSessionLocal()
 
     try:
-        existing_admin = db.query(User).filter(User.role == "admin").first()
+        existing_admin = db.query(User).filter(User.role_id == "admin").first()
         if existing_admin:
             logger.info(
                 "Un administrateur existe déjà. Aucune action nécessaire."
@@ -53,7 +53,7 @@ def create_first_users():
             User(
                 email=anonymize(admin_email),
                 password=hash_password(admin_password),
-                role="admin",
+                role_id="admin",
                 is_active=True,
             ),
         ]
@@ -63,7 +63,7 @@ def create_first_users():
             db.commit()
             db.refresh(user)
             logger.info(
-                f"{user.role.capitalize()} {admin_email} créé avec succès."
+                f"{user.role_id.capitalize()} {admin_email} créé avec succès."
             )
 
     except Exception as e:
