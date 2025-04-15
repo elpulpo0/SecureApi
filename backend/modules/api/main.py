@@ -28,18 +28,20 @@ app.add_middleware(
 
 router = APIRouter()
 
-# Ajout de la route /hello pour vérifier que l'API fonctionne
-@router.get("/hello", tags=["Hello API"])
-def hello():
-    return {"message": "Hello, FastAPI!"}
-
 # Inclusion des routes existantes (ici, les routes liées aux utilisateurs)
 router.include_router(users_router)
 
 # Inclusion du router dans l'application principale
 app.include_router(router)
 
+
 # Redirection vers la documentation interactive de FastAPI
 @app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse(url="/docs")
+
+
+# Ajout de la route /hello pour vérifier que l'API fonctionne
+@app.get("/hello", tags=["Hello API"])
+def hello():
+    return {"message": "Hello, FastAPI!"}

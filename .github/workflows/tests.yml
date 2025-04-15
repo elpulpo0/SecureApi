@@ -1,4 +1,5 @@
 name: Tests
+
 on:
   push:
     branches:
@@ -12,31 +13,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.12'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
 
-    - name: Install dependencies
-      run: |
-        cd backend
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Format code with black
-      run:  |
-        black --line-length 99 .
+      - name: Format code with black
+        run: |
+          black --line-length 99 .
 
-    - name: Lint with flake8
-      run: |
-        flake8 --max-line-length=100 .
+      - name: Lint with flake8
+        run: |
+          flake8 --max-line-length=100 .
 
-    - name: Run tests with pytest
-      env:
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      run: |
-        cd backend
-        pytest
+      - name: Run tests with pytest
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        run: |
+          cd backend
+          pytest
