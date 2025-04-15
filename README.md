@@ -31,6 +31,9 @@ ADMIN_PASSWORD=
 
 Dans `backend\modules\database\config.py`, `backend\modules\database\dependancies.py` et `backend\modules\database\session.py`, ajoutez la deuxième base de donnée pour correspondre au projet actuel, créez un dossier dédié à cette base de donnée en parralèle du dossier users et ensuite ajustez les imports correspondants dans `backend\modules\api\main.py`
 
-## Lancer le backend
+## Lancer l'application
 
-```uvicorn modules.api.main:app --reload```
+Ouvrez 2 terminaux:
+
+Terminal 1 : ```cd backend && uvicorn modules.api.main:app --reload```
+Terminal 2 : ```cd frontend && streamlit run main.py```

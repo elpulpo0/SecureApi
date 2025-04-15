@@ -101,6 +101,7 @@ def read_users_me(
 
         return UserResponse(
             id=user.id,
+            name=user.name,
             email=user.email,
             is_active=user.is_active,
             role=user.role.role
@@ -159,6 +160,7 @@ def get_all_users(
         return [
             UserResponse(
                 id=u.id,
+                name=u.name,
                 email=u.email,
                 is_active=u.is_active,
                 role=u.role.role
@@ -250,6 +252,7 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_users_db)):
     # Créer un nouvel utilisateur
     new_user = User(
         email=anonymized_email,
+        name=user_data.name,
         password=hash_password(user_data.password),
         role_id=role_obj.id,
         is_active=True,
@@ -261,6 +264,7 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_users_db)):
 
     return UserResponse(
         id=new_user.id,
+        name=new_user.name,
         email=new_user.email,
         is_active=new_user.is_active,
         role=new_user.role.role

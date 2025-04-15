@@ -28,7 +28,7 @@ def init_users_db():
         create_roles_and_first_users()
     else:
         logger.info(
-            "La base de données 'users' existe déjà. Aucun changement nécessaire."  # noqa
+            "La base de données 'users' existe déjà. Aucun changement nécessaire."
         )
 
 
@@ -49,18 +49,20 @@ def create_roles_and_first_users():
         if not admin_role:
             raise ValueError("Le rôle 'admin' n'existe pas")
 
-        existing_admin = db.query(User).filter(User.role_id == admin_role.id).first()  # noqa
+        existing_admin = db.query(User).filter(User.role_id == admin_role.id).first()
         if existing_admin:
-            logger.info("Un administrateur existe déjà. Aucune action nécessaire.")  # noqa
+            logger.info("Un administrateur existe déjà. Aucune action nécessaire.")
             return
 
         # Récupération depuis le .env
         admin_email = os.getenv("ADMIN_EMAIL")
+        admin_name = os.getenv("ADMIN_NAME")
         admin_password = os.getenv("ADMIN_PASSWORD")
 
         # Création du premier utilisateur admin
         admin_user = User(
             email=anonymize(admin_email),
+            name=admin_name,
             password=hash_password(admin_password),
             role_id=admin_role.id,
             is_active=True,

@@ -24,7 +24,7 @@ def login_page():
 
     with tab2:
         st.subheader("Créer un compte")
-        full_name = st.text_input("Nom complet", key="signup_name")
+        name = st.text_input("Nom complet", key="signup_name")
         signup_email = st.text_input("Email", key="signup_email")
         signup_password = st.text_input("Mot de passe", type="password", key="signup_password")
         confirm_password = st.text_input("Confirmer le mot de passe", type="password", key="confirm_password")
@@ -32,7 +32,7 @@ def login_page():
             if signup_password != confirm_password:
                 st.error("❌ Les mots de passe ne correspondent pas.")
             else:
-                success, message = create_user(full_name, signup_email, signup_password)
+                success, message = create_user(name, signup_email, signup_password)
                 if success:
                     st.success("✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.")
                 else:

@@ -18,8 +18,8 @@ def authenticate_user(email, password):
     return None
 
 
-def create_user(full_name, email, password):
-    response = requests.post(f"{API_URL}/users/", json={"full_name": full_name, "email": email, "password": password})
+def create_user(name, email, password):
+    response = requests.post(f"{API_URL}/users/", json={"name": name, "email": email, "password": password})
     if response.status_code == 201:
         return True, "Compte créé"
     elif response.status_code == 400:

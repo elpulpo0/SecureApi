@@ -44,7 +44,7 @@ def get_user_by_email(email: str, db: Session):
 
 
 def authenticate_user(db: Session, email: str, password: str):
-    """Authentifie un utilisateur en vérifiant son email et son mot de passe."""  # noqa
+    """Authentifie un utilisateur en vérifiant son email et son mot de passe."""
     logger.info("Authentification de l'utilisateur...")
 
     # Hacher l'email fourni par l'utilisateur pour la comparaison
@@ -64,21 +64,3 @@ def authenticate_user(db: Session, email: str, password: str):
 
     logger.info("Utilisateur authentifié avec succès")
     return user
-
-
-def create_roles():
-    db: Session = Depends(get_users_db)
-    existing = db.query(Role).all()
-    if existing:
-        print("✅ Rôles déjà créés.")
-        return
-
-    roles = ["admin", "reader"]
-
-    for r in roles:
-        role = Role(role=r)
-        db.add(role)
-        print(f"🔧 Rôle '{r}' ajouté.")
-
-    db.commit()
-    print("✅ Rôles insérés avec succès.")  # noqa

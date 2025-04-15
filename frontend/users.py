@@ -13,6 +13,6 @@ def users_page():
         return
 
     for user in users:
-        with st.expander(user.get("full_name", "Utilisateur inconnu")):
-            st.write(f"**Email** : {user.get('email', '-')}")
+        with st.expander(user.get("name", "Utilisateur inconnu")):
+            st.write(f"**Email** : l'email est anonymisé")
             st.write(f"**Rôle** : {user.get('role', '-')}")
