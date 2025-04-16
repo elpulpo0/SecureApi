@@ -1,13 +1,15 @@
 from loguru import logger
 import sys
 import os
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 def configure_logger():
     logger.remove()
 
     # Créer un dossier de logs s'il n'existe pas
-    log_dir = "logs"
+    log_dir = BASE_DIR / "logs"
     os.makedirs(log_dir, exist_ok=True)
 
     # Format de log avec une coloration automatique des niveaux grâce à la balise <level>
