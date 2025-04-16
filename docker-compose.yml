@@ -1,0 +1,39 @@
+services:
+  backend:
+    container_name: secureapi_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - db:/app/db
+      - logs:/app/logs
+    env_file:
+      - .env     
+    ports:
+      - "${PORT_BACK}:8000"
+    networks:
+      - secureapi
+
+  frontend:
+    container_name: secureapi_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - backend
+    env_file:
+      - .env     
+    ports:
+      - "${PORT_FRONT}:8501"
+    networks:
+      - secureapi
+
+networks:
+  secureapi:
+    driver: bridge
+
+volumes:
+  db:
+  logs:

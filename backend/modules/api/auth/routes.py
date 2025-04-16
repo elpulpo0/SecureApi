@@ -25,7 +25,7 @@ ALGORITHM = "HS256"
 
 # Gestion de l'authentification avec OAuth2
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/login",
+    tokenUrl="auth/login",
     scopes={
         "me": "Voir ses informations personnelles",
         "admin": "Accès aux opérations administratives",
@@ -40,9 +40,8 @@ auth_router = APIRouter()
     response_model=Token,
     summary="Connexion et génération d'un token JWT",
     description="Vérifie les informations de connexion et retourne "
-    "un token d'authentification JWT si les identifiants sont corrects.",
-    tags=["Authentification"],
-)
+    "un token d'authentification JWT si les identifiants sont corrects.")
+
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_users_db),
@@ -81,8 +80,7 @@ def login_for_access_token(
     response_model=Token,
     summary="Rafraîchir un token JWT d'accès",
     description="Permet de générer un nouveau token d'accès à partir d'un token de rafraîchissement valide. "
-    "Le token de rafraîchissement doit contenir le type 'refresh' pour être accepté.",
-    tags=["Authentification"],
+    "Le token de rafraîchissement doit contenir le type 'refresh' pour être accepté."
 )
 def refresh_token(token: str = Depends(oauth2_scheme)):
     try:
@@ -108,9 +106,7 @@ def refresh_token(token: str = Depends(oauth2_scheme)):
     "/users/me",
     response_model=UserResponse,
     summary="Récupérer les informations de l'utilisateur connecté",
-    description="Retourne les détails de l'utilisateur authentifié en utilisant son token.",
-    tags=["Authentification"],
-)
+    description="Retourne les détails de l'utilisateur authentifié en utilisant son token.")
 def read_users_me(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_users_db)
 ):
@@ -161,9 +157,7 @@ def read_users_me(
 @auth_router.get(
     "/users/",
     response_model=list[UserResponse],
-    summary="Lister tous les utilisateurs",
-    tags=["Authentification"],
-)
+    summary="Lister tous les utilisateurs")
 def get_all_users(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_users_db)
 ):
@@ -198,9 +192,7 @@ def get_all_users(
     "/users/{user_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Supprimer un utilisateur",
-    description="Supprime un utilisateur spécifique en fonction de son ID.",
-    tags=["Authentification"],
-)
+    description="Supprime un utilisateur spécifique en fonction de son ID.")
 def delete_user(
     user_id: int,
     token: str = Depends(oauth2_scheme),
@@ -239,7 +231,6 @@ def delete_user(
     response_model=UserResponse,
     summary="Créer un nouvel utilisateur",
     description="Ajoute un nouvel utilisateur à la base de données.",
-    tags=["Authentification"],
     status_code=status.HTTP_201_CREATED,
 )
 def create_user(user_data: UserCreate, db: Session = Depends(get_users_db)):
@@ -284,9 +275,7 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_users_db)):
 @auth_router.patch(
     "/users/{user_id}/role",
     summary="Modifier le rôle d'un utilisateur",
-    description="Permet à un administrateur de modifier le rôle d'un utilisateur.",
-    tags=["Authentification"],
-)
+    description="Permet à un administrateur de modifier le rôle d'un utilisateur.")
 def update_user_role(
     user_id: int,
     role_update: RoleUpdate,

@@ -17,13 +17,11 @@ users_router = APIRouter()
 
 
 @users_router.get(
-    "/users/id/{user_id}",
+    "/users/{user_id}",
     response_model=UserResponse,
     summary="Récupérer un utilisateur par son ID",
     description="Retourne les informations d'un utilisateur "
-    "spécifique en fonction de son ID.",
-    tags=["Utilisateurs"],
-)
+    "spécifique en fonction de son ID.")
 def get_user(user_id: int, db: Session = Depends(get_users_db)):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
