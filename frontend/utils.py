@@ -28,7 +28,7 @@ def create_user(name, email, password):
 
 def get_users(token):
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(f"{API_URL}/users/users/", headers=headers)
+    response = requests.get(f"{API_URL}/auth/users/", headers=headers)
     return response.json() if response.status_code == 200 else []
 
 
