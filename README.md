@@ -44,12 +44,6 @@
 
 ```pip freeze > requirements.txt```
 
-# Lancer l'application
-
-Terminal 1 : ```cd backend && uvicorn modules.api.main:app --reload```
-
-Terminal 2 : ```cd frontend && streamlit run main.py```
-
 # Copier et éditer le fichier .env_example en .env
 
 ```sh
@@ -61,6 +55,12 @@ ADMIN_PASSWORD=
 PORT_BACK=
 PORT_FRONT=
 ```
+
+# Lancer l'application
+
+Terminal 1 : ```cd backend && uvicorn modules.api.main:app --reload```
+
+Terminal 2 : ```cd frontend && streamlit run main.py```
 
 # Mettre à jour le template pour ajouter une base de donnée (Optionnel)
 
