@@ -40,4 +40,14 @@ def configure_logger():
         format=log_format,
     )
 
+    # Fichier uniquement pour DEBUG
+    logger.add(
+        f"{log_dir}/debug.log",
+        level="DEBUG",
+        filter=lambda record: record["level"].name == "DEBUG",
+        rotation="500 KB",
+        retention="10 days",
+        format=log_format,
+    )
+
     return logger

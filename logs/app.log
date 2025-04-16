@@ -47,3 +47,182 @@
 2025-04-15 17:06:55 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-15 15:36:55.238865+00:00
 2025-04-15 17:06:55 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-22 15:06:55.239865+00:00
 2025-04-15 17:06:55 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-15 15:21:55.249265+00:00
+2025-04-16 14:31:32 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 14:31:32 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:31:32 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 14:31:32 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:31:32 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:31:32 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:31:32 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:31:32 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:01:32.914014+00:00
+2025-04-16 14:31:33 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:31:33.106051+00:00
+2025-04-16 14:31:33 | modules.api.auth.functions | INFO | Refresh token found: 712074cd04d1a9b7945f8466066af82031b4b9eb6b0304412e81b79640c8fe22, expires_at: 2025-04-23 12:31:33.106051
+2025-04-16 14:31:33 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:31:33.306137+00:00
+2025-04-16 14:31:33 | modules.api.auth.functions | WARNING | No refresh token found.
+2025-04-16 14:31:33 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:31:33.580496+00:00
+2025-04-16 14:31:33 | modules.api.auth.functions | INFO | Refresh token found: b716e43391d3a2e7fbc896b6525462b0e99ea06605b9d34aea7b74bd527eb93e, expires_at: 2025-04-23 12:31:33.580496
+2025-04-16 14:32:45 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 14:32:45 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:32:45 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 14:32:45 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:32:45 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:32:45 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:32:45 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:32:45 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:02:45.925983+00:00
+2025-04-16 14:32:46 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:32:46.114721+00:00
+2025-04-16 14:32:46 | modules.api.auth.functions | INFO | Refresh token found: 2bff5e4d8cdff073190b3327fa775504da7d7cbd4c1c6680ad42e4807d9b4e79, expires_at: 2025-04-23 12:32:46.114721
+2025-04-16 14:32:46 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:32:46.314308+00:00
+2025-04-16 14:32:46 | modules.api.auth.functions | WARNING | No refresh token found.
+2025-04-16 14:32:46 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:32:46.584941+00:00
+2025-04-16 14:32:46 | modules.api.auth.functions | INFO | Refresh token found: 73d2683a2df0eacd8f8899c01eb43eb5f69c5fdb2123dac4bff9771bf162a98e, expires_at: 2025-04-23 12:32:46.584941
+2025-04-16 14:40:36 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 14:40:37 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:40:37 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 14:40:37 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:40:37 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:40:37 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:40:37 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:40:37 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:10:37.620044+00:00
+2025-04-16 14:40:37 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:40:37.812406+00:00
+2025-04-16 14:40:37 | modules.api.auth.functions | INFO | Refresh token found: 0c0aff7b79a81ff4775b25518fb1459d15fa30e8474b884546e8edb74b8ed905, expires_at: 2025-04-23 12:40:37.812406
+2025-04-16 14:40:38 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:40:38.010570+00:00
+2025-04-16 14:40:38 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:40:38.286549+00:00
+2025-04-16 14:40:38 | modules.api.auth.functions | INFO | Refresh token found: 1daf6f4844adcdbca8f7715ac29280253d159b44f8613583f3fbc7793bbdc482, expires_at: 2025-04-23 12:40:38.287038
+2025-04-16 14:45:22 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 14:45:22 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:45:22 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:15:23.036144+00:00
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:45:23.229114+00:00
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Refresh token found: acc1b0a9a541b7b44a97f4bf8ad787280a5d5507a47138e0269ec6ee61b97d40, expires_at: 2025-04-23 12:45:23.229114
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:45:23.430177+00:00
+2025-04-16 14:45:23 | modules.api.auth.functions | WARNING | No refresh token found.
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:45:23.706641+00:00
+2025-04-16 14:45:23 | modules.api.auth.functions | INFO | Refresh token found: 4b8158b48ca01bd83f6acab7f14675f89f1baacd2eba0240d0ad0ae7e89606f2, expires_at: 2025-04-23 12:45:23.706641
+2025-04-16 14:46:14 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:16:15.553258+00:00
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:46:15.743890+00:00
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Refresh token found: a48a26f85daf723a558d71f1df88e1345b0ae5b30346986ef7f9005874870604, expires_at: 2025-04-23 12:46:15.743890
+2025-04-16 14:46:15 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:46:15.940188+00:00
+2025-04-16 14:46:15 | modules.api.auth.functions | WARNING | No refresh token found.
+2025-04-16 14:46:16 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:46:16.206479+00:00
+2025-04-16 14:46:16 | modules.api.auth.functions | INFO | Refresh token found: b4c68d0b753d1c03462074747aaed770e759e68ca6c6a676697c3a7d3f3ceca9, expires_at: 2025-04-23 12:46:16.207491
+2025-04-16 14:49:55 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 14:49:55 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:49:55 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:19:56.160451+00:00
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:49:56.355087+00:00
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Refresh token found: f2c36b8f980d0e1dc259ef545328c731ced9c31a47b1663f3ab0ccb6437d1b60, expires_at: 2025-04-23 12:49:56.355087
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:49:56.555760+00:00
+2025-04-16 14:49:56 | modules.api.auth.functions | WARNING | No refresh token found.
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:49:56.834826+00:00
+2025-04-16 14:49:56 | modules.api.auth.functions | INFO | Refresh token found: 19e079f5451bd427f38fb11540f44b8f36a5e48f12fb50f77a7c61319e5ab2d2, expires_at: 2025-04-23 12:49:56.834826
+2025-04-16 14:50:50 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 14:50:50 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:50:50 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 14:50:50 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:50:50 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:50:50 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:50:50 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:50:50 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:20:50.978032+00:00
+2025-04-16 14:50:51 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:50:51.171031+00:00
+2025-04-16 14:50:51 | modules.api.auth.functions | INFO | Refresh token found: 9a4e680db928284d5e34b23f8ea3a26e4bb70949452949ba4d7fdf12e07ac2a9, expires_at: 2025-04-23 12:50:51.171031
+2025-04-16 14:50:51 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:50:51.371065+00:00
+2025-04-16 14:50:51 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:50:51.645893+00:00
+2025-04-16 14:50:51 | modules.api.auth.functions | INFO | Refresh token found: aea4906748dd9829e55e1c7484440aacf59521394beab396cb245d08ecff890b, expires_at: 2025-04-23 12:50:51.646398
+2025-04-16 14:55:39 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:25:40.435563+00:00
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:55:40.630338+00:00
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Refresh token found: dc782513345d2cbcf25bb9420e0b1bb572811647b095f47a8d330cde1c4866a7, expires_at: 2025-04-23 12:55:40.630838
+2025-04-16 14:55:40 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:55:40.830551+00:00
+2025-04-16 14:55:40 | modules.api.auth.functions | WARNING | No refresh token found.
+2025-04-16 14:55:41 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 12:55:41.120848+00:00
+2025-04-16 14:55:41 | modules.api.auth.functions | INFO | Refresh token found: f5cb76bbda470f86e85de865c3ca2ea29e994d2d27512dde8b702dd69da3aa9d, expires_at: 2025-04-23 12:55:41.121347
+2025-04-16 15:05:24 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 15:07:12 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 15:07:38 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 15:07:38 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:07:39 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 15:07:39 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:07:39 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:07:39 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:07:39 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:07:39 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:37:39.384487+00:00
+2025-04-16 15:07:39 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:07:39.577811+00:00
+2025-04-16 15:07:39 | modules.api.auth.functions | INFO | Refresh token found: 15883d78466853b71928389fb6c565b32ebfc1ad1ab0edc4613285d2a5dd08b7, expires_at: 2025-04-23 13:07:39.578812
+2025-04-16 15:07:39 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:07:39.777466+00:00
+2025-04-16 15:07:40 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:07:40.052748+00:00
+2025-04-16 15:07:40 | modules.api.auth.functions | INFO | Refresh token found: 5fc5911dc9bebcd6f118d948fc0d6a301ec903276d66c137892bb3085ba032da, expires_at: 2025-04-23 13:07:40.052748
+2025-04-16 15:09:08 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:39:09.588915+00:00
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:09:09.778946+00:00
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Refresh token found: ddfccf2fe8ce37d053c272097c7068dac3bc7ab6d0ebb5a67a2f87dff69f702b, expires_at: 2025-04-23 13:09:09.779446
+2025-04-16 15:09:09 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:09:09.975616+00:00
+2025-04-16 15:09:10 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:09:10.656281+00:00
+2025-04-16 15:09:10 | modules.api.auth.functions | INFO | Refresh token found: 96190481b9719549e2c6eb09c1cc13bf5b646deff7622caddde23c344ed37ee4, expires_at: 2025-04-23 13:09:10.656281
+2025-04-16 15:16:49 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:46:50.415025+00:00
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:16:50.609156+00:00
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Refresh token found: 2eb37909bde347b787c8ee210789260667a3c120ab8e482024a4bc9b2576904b, expires_at: 2025-04-23 13:16:50.609156
+2025-04-16 15:16:50 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:16:50.803499+00:00
+2025-04-16 15:16:51 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:16:51.469791+00:00
+2025-04-16 15:16:51 | modules.api.auth.functions | INFO | Refresh token found: 7e02f08ecd4f743f2d6ff5e8702f4b976eb443fb3d4d03b61f253a3b4374db07, expires_at: 2025-04-23 13:16:51.469791
+2025-04-16 15:18:42 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 15:18:43 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:18:43 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 15:18:43 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:18:43 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:18:43 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:18:43 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:18:43 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:48:43.674532+00:00
+2025-04-16 15:18:43 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:18:43.867947+00:00
+2025-04-16 15:18:43 | modules.api.auth.functions | INFO | Refresh token found: f565464cdeec9c7168a85bcf0c353549311f75f965b1c710435a32a84c353e92, expires_at: 2025-04-23 13:18:43.868482
+2025-04-16 15:18:44 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:18:44.068530+00:00
+2025-04-16 15:18:44 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:18:44.747236+00:00
+2025-04-16 15:18:44 | modules.api.auth.functions | INFO | Refresh token found: 40224b8a9c6ecb7378326f9b96d632a88b020edc2f73e92fe9da2d28e35c9d24, expires_at: 2025-04-23 13:18:44.747736
+2025-04-16 15:21:58 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 15:21:58 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:21:58 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 15:21:59 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:21:59 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:21:59 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:21:59 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:21:59 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:51:59.078166+00:00
+2025-04-16 15:21:59 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:21:59.272275+00:00
+2025-04-16 15:21:59 | modules.api.auth.functions | INFO | Refresh token found: f71b1300d00f14f2311eb6421da0b2eac7f9452561fe4cc6f257d8639d02b0ea, expires_at: 2025-04-23 13:21:59.272275
+2025-04-16 15:21:59 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:21:59.468119+00:00
+2025-04-16 15:22:00 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:22:00.119707+00:00
+2025-04-16 15:22:00 | modules.api.auth.functions | INFO | Refresh token found: d56db27938160340574df554a134fda0de08073abd1a1efb78f74b816cd68d23, expires_at: 2025-04-23 13:22:00.120207
+2025-04-16 15:23:12 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 15:23:12 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:53:12.167357+00:00

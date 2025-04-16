@@ -67,6 +67,12 @@ def find_refresh_token(db: Session, provided_token: str) -> RefreshToken | None:
     refresh_token = (
         db.query(RefreshToken).filter(RefreshToken.token == provided_token).first()
     )
+    if refresh_token:
+        logger.info(
+            f"Refresh token found: {refresh_token.token}, expires_at: {refresh_token.expires_at}"
+        )
+    else:
+        logger.warning("No refresh token found.")
     return refresh_token
 
 
