@@ -1,21 +1,27 @@
 from utils.logger_config import configure_logger
-from datetime import timedelta
+from datetime import timedelta, timezone, datetime
 from dotenv import load_dotenv
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi import APIRouter, Depends, HTTPException, status
 from modules.api.users.schemas import Token
 from modules.database.dependencies import get_users_db
 from sqlalchemy.orm import Session
-from modules.api.auth.functions import authenticate_user, create_access_token
+from modules.api.auth.functions import (
+    authenticate_user,
+    create_access_token,
+    store_refresh_token,
+)
 import os
 from jose import JWTError, jwt
 from modules.api.users.schemas import UserResponse, UserCreate, RoleUpdate
+from modules.api.users.models import RefreshToken
 from modules.api.users.create_db import User, Role
 from modules.api.users.functions import get_user_by_email
-from modules.api.auth.security import anonymize, hash_password
+from modules.api.auth.functions import find_refresh_token
+from modules.api.auth.security import anonymize, hash_password, hash_token
 from fastapi.responses import JSONResponse
 
-load_dotenv()  # Charge les variables d'environnement depuis .env
+load_dotenv()
 
 # Configuration du logger
 logger = configure_logger()
@@ -68,6 +74,11 @@ def login_for_access_token(
         expires_delta=refresh_token_expires,
     )
 
+    # Sauvegarde en base
+    refresh_expiry = datetime.now(timezone.utc) + refresh_token_expires
+    hashed_token = hash_token(refresh_token)
+    store_refresh_token(db, user.id, hashed_token, refresh_expiry)
+
     return JSONResponse({
         "access_token": access_token,
         "refresh_token": refresh_token,
@@ -79,10 +90,12 @@ def login_for_access_token(
     "/refresh",
     response_model=Token,
     summary="Rafraîchir un token JWT d'accès",
-    description="Permet de générer un nouveau token d'accès à partir d'un token de rafraîchissement valide. "
-    "Le token de rafraîchissement doit contenir le type 'refresh' pour être accepté."
+    description="Permet de générer un nouveau token d'accès à partir d'un token de rafraîchissement valide."
+    "Le token de rafraîchissement doit contenir le type 'refresh' pour être accepté.",
 )
-def refresh_token(token: str = Depends(oauth2_scheme)):
+def refresh_token(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_users_db)
+):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
@@ -95,11 +108,40 @@ def refresh_token(token: str = Depends(oauth2_scheme)):
     except JWTError:
         raise HTTPException(status_code=401, detail="Token non valide")
 
+    # Vérifie si le token est encore en base
+    hashed_token = hash_token(token)
+    refresh_token_db = find_refresh_token(db, hashed_token)
+
+    if not refresh_token_db or refresh_token_db.expires_at < datetime.now(timezone.utc):
+        raise HTTPException(
+            status_code=401, detail="Refresh token expiré ou introuvable"
+        )
+
     # On recrée un nouvel access token court
     new_access_token = create_access_token(
         data={"sub": email, "role": role}, expires_delta=timedelta(minutes=15)
     )
-    return JSONResponse({"access_token": new_access_token, "token_type": "bearer"})
+
+    # Générer également un nouveau refresh token
+    new_refresh_token = create_access_token(
+        data={"sub": email, "role": role, "type": "refresh"},
+        expires_delta=timedelta(days=7),
+    )
+
+    # Sauvegarder le nouveau refresh token
+    refresh_expiry = datetime.now(timezone.utc) + timedelta(days=7)
+    hashed_new_refresh_token = hash_token(new_refresh_token)
+    store_refresh_token(
+        db, user_id=email, token=hashed_new_refresh_token, expires_at=refresh_expiry
+    )
+
+    return JSONResponse(
+        {
+            "access_token": new_access_token,
+            "refresh_token": new_refresh_token,
+            "token_type": "bearer",
+        }
+    )
 
 
 @auth_router.get(

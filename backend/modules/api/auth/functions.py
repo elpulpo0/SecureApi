@@ -1,4 +1,4 @@
-from modules.api.auth.security import verify_password, anonymize
+from modules.api.auth.security import verify_password, anonymize, hash_token
 from datetime import datetime, timedelta, timezone
 from jose import jwt
 import os
@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from utils.logger_config import configure_logger
 from modules.api.users.functions import get_user_by_email
 from sqlalchemy.orm import Session
+from modules.api.users.models import RefreshToken
 
 # Configuration du logger
 logger = configure_logger()
@@ -50,3 +51,24 @@ def authenticate_user(db: Session, email: str, password: str):
 
     logger.info("Utilisateur authentifié avec succès")
     return user
+
+
+def store_refresh_token(db: Session, user_id: int, token: str, expires_at: datetime):
+    refresh_token = RefreshToken(
+        token=token,
+        user_id=user_id,
+        expires_at=expires_at,
+    )
+    db.add(refresh_token)
+    db.commit()
+
+
+def find_refresh_token(db: Session, provided_token: str) -> RefreshToken | None:
+    refresh_token = (
+        db.query(RefreshToken).filter(RefreshToken.token == provided_token).first()
+    )
+    return refresh_token
+
+
+def verify_token(provided_token: str, stored_hash: str) -> bool:
+    return hash_token(provided_token) == stored_hash
