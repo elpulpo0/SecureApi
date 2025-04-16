@@ -47,3 +47,14 @@
 2025-04-15 17:06:55 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-15 15:36:55.238865+00:00
 2025-04-15 17:06:55 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-22 15:06:55.239865+00:00
 2025-04-15 17:06:55 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-15 15:21:55.249265+00:00
+2025-04-16 15:00:40 | modules.api.users.create_db | INFO | La base de données 'users' existe déjà. Aucun changement nécessaire.
+2025-04-16 15:00:41 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:00:41 | modules.api.auth.functions | INFO | Utilisateur authentifié avec succès
+2025-04-16 15:00:41 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:00:41 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:00:41 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 15:00:41 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 15:00:41 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-16 13:30:41.883795+00:00
+2025-04-16 15:00:42 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:00:42.089317+00:00
+2025-04-16 15:00:42 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:00:42.292460+00:00
+2025-04-16 15:00:42 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 13:00:42.929666+00:00
