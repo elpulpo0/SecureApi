@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 
 from modules.api.auth.security import anonymize, hash_password
 from utils.logger_config import configure_logger
-from modules.api.users.models import User, Base, Role, RefreshToken
+from modules.api.users.models import User, Role
 from modules.database.config import USERS_DATABASE_PATH
-from modules.database.session import users_engine, UsersSessionLocal
+from modules.database.session import users_engine, UsersSessionLocal, Base
 
 # Configuration du logger
 logger = configure_logger()
