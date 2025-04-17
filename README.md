@@ -7,6 +7,7 @@
 ## Fonctionnalités principales
 
 - Authentification sécurisée avec **bcrypt** & JWT
+- Anonymisation des données sensibles dans la base de donnée avec hashlib
 - **Rotation des refresh tokens** avec stockage en base
 - Gestion des rôles & scopes pour autorisation fine (en cours)
 - Swagger /docs auto-généré avec FastAPI
@@ -74,7 +75,7 @@ ADMIN_NAME=example
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=password123
 PORT_BACK=8000
-PORT_FRONT=8501
+BACKEND_URL=http://localhost:8000
 ```
 
 ## Lancer l'application
@@ -97,7 +98,7 @@ Dans `backend/modules/database/config.py`, `dependancies.py` et `session.py`, aj
 docker-compose up --build
 ```
 
-- Backend FastAPI : http://localhost:8000/docs
+- Backend FastAPI : http://localhost:8000
 - Frontend Streamlit : http://localhost:8501
 
 ## Lancer les tests
