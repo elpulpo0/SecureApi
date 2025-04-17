@@ -14,7 +14,7 @@
 
 ### Si le fichier requirements n'est pas disponible:
 
-```pip install fastapi uvicorn pydantic loguru bcrypt openpyxl python-jose python-dotenv SQLAlchemy python-multipart pydantic[email] pytest flake8 httpx streamlit requests```
+```pip install fastapi uvicorn pydantic loguru bcrypt openpyxl python-jose python-dotenv SQLAlchemy python-multipart pydantic[email] pytest flake8 httpx streamlit requests black```
 
 ```pip freeze > requirements.txt```
 
