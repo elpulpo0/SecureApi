@@ -17,6 +17,7 @@ load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
+
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (
@@ -53,7 +54,11 @@ def authenticate_user(db: Session, email: str, password: str):
     return user
 
 
-def store_refresh_token(db: Session, user_id: int, token: str, expires_at: datetime):
+def store_refresh_token(
+        db: Session,
+        user_id: int,
+        token: str,
+        expires_at: datetime):
     refresh_token = RefreshToken(
         token=token,
         user_id=user_id,
@@ -63,10 +68,11 @@ def store_refresh_token(db: Session, user_id: int, token: str, expires_at: datet
     db.commit()
 
 
-def find_refresh_token(db: Session, provided_token: str) -> RefreshToken | None:
-    refresh_token = (
-        db.query(RefreshToken).filter(RefreshToken.token == provided_token).first()
-    )
+def find_refresh_token(
+        db: Session,
+        provided_token: str) -> RefreshToken | None:
+    refresh_token = (db.query(RefreshToken).filter(
+        RefreshToken.token == provided_token).first())
     if refresh_token:
         logger.info(
             f"Refresh token found: {refresh_token.token}, expires_at: {refresh_token.expires_at}"

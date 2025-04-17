@@ -18,25 +18,27 @@ tests/test_auth.py::test_refresh_token_validity PASSED                   [100%]
 =================================== FAILURES ===================================
 ________________________ test_authenticate_user_success ________________________
 
-db = <sqlalchemy.orm.session.Session object at 0x107fa1330>
-test_user = <modules.api.users.models.User object at 0x107fa1540>
+db = <sqlalchemy.orm.session.Session object at 0x1066446a0>
+test_user = <modules.api.users.models.User object at 0x1066450c0>
 
     def test_authenticate_user_success(db, test_user):
-        user = authenticate_user(db, "test@example.com", "testpass123")
+        db.add(test_user)
+        db.commit()
+        user = authenticate_user(db, test_user.email, "testpass123")
 >       assert user is not False
 E       assert False is not False
 
-tests/test_auth.py:104: AssertionError
+tests/test_auth.py:106: AssertionError
 ----------------------------- Captured stderr call -----------------------------
-2025-04-16 16:23:48 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
-2025-04-16 16:23:48 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
+2025-04-16 17:18:40 | modules.api.auth.functions | INFO | Authentification de l'utilisateur...
+2025-04-16 17:18:40 | modules.api.auth.functions | INFO | Utilisateur non trouvé.
 ___________________________ test_refresh_route_works ___________________________
 
-self = <sqlalchemy.engine.base.Connection object at 0x1080a8f40>
-dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x107f57d90>
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x1080a8fa0>
-statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x1080c1b70>
-parameters = [('5607e144e3f2fefd3695f2a49d55a13124e2c2f06431a04ec3fe365dbc8f5981', 1, 0)]
+self = <sqlalchemy.engine.base.Connection object at 0x10674f910>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x1065fbe80>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10674dbd0>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x10675e470>
+parameters = [('c9aebac9ddc50e7908ed0cf31a955da3a8d796b0422a2992facea351c525048f', 1, 0)]
 
     def _exec_single_context(
         self,
@@ -162,11 +164,11 @@ parameters = [('5607e144e3f2fefd3695f2a49d55a13124e2c2f06431a04ec3fe365dbc8f5981
 .venv_backend/lib/python3.10/site-packages/sqlalchemy/engine/base.py:1964: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x107f57d90>
-cursor = <sqlite3.Cursor object at 0x108097040>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x1065fbe80>
+cursor = <sqlite3.Cursor object at 0x10674b140>
 statement = 'SELECT refresh_tokens.id AS refresh_tokens_id, refresh_tokens.token AS refresh_tokens_token, refresh_tokens.user_id A...esh_tokens.revoked AS refresh_tokens_revoked \nFROM refresh_tokens \nWHERE refresh_tokens.token = ?\n LIMIT ? OFFSET ?'
-parameters = ('5607e144e3f2fefd3695f2a49d55a13124e2c2f06431a04ec3fe365dbc8f5981', 1, 0)
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x1080a8fa0>
+parameters = ('c9aebac9ddc50e7908ed0cf31a955da3a8d796b0422a2992facea351c525048f', 1, 0)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10674dbd0>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
@@ -176,8 +178,8 @@ E       sqlite3.OperationalError: no such table: refresh_tokens
 
 The above exception was the direct cause of the following exception:
 
-db = <sqlalchemy.orm.session.Session object at 0x1080c2b60>
-client_with_override = <starlette.testclient.TestClient object at 0x1080c2350>
+db = <sqlalchemy.orm.session.Session object at 0x10675f280>
+client_with_override = <starlette.testclient.TestClient object at 0x10675f130>
 
     def test_refresh_route_works(db, client_with_override):
         email = "testrefresh@example.com"
@@ -195,7 +197,7 @@ client_with_override = <starlette.testclient.TestClient object at 0x1080c2350>
             headers={"Authorization": f"Bearer {old_refresh_token}"},
         )
 
-tests/test_auth.py:166: 
+tests/test_auth.py:168: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 .venv_backend/lib/python3.10/site-packages/starlette/testclient.py:538: in post
     return super().post(
@@ -297,11 +299,11 @@ modules/api/auth/functions.py:68: in find_refresh_token
     self.dialect.do_execute(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x107f57d90>
-cursor = <sqlite3.Cursor object at 0x108097040>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x1065fbe80>
+cursor = <sqlite3.Cursor object at 0x10674b140>
 statement = 'SELECT refresh_tokens.id AS refresh_tokens_id, refresh_tokens.token AS refresh_tokens_token, refresh_tokens.user_id A...esh_tokens.revoked AS refresh_tokens_revoked \nFROM refresh_tokens \nWHERE refresh_tokens.token = ?\n LIMIT ? OFFSET ?'
-parameters = ('5607e144e3f2fefd3695f2a49d55a13124e2c2f06431a04ec3fe365dbc8f5981', 1, 0)
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x1080a8fa0>
+parameters = ('c9aebac9ddc50e7908ed0cf31a955da3a8d796b0422a2992facea351c525048f', 1, 0)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10674dbd0>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
@@ -310,12 +312,12 @@ E       [SQL: SELECT refresh_tokens.id AS refresh_tokens_id, refresh_tokens.toke
 E       FROM refresh_tokens 
 E       WHERE refresh_tokens.token = ?
 E        LIMIT ? OFFSET ?]
-E       [parameters: ('5607e144e3f2fefd3695f2a49d55a13124e2c2f06431a04ec3fe365dbc8f5981', 1, 0)]
+E       [parameters: ('c9aebac9ddc50e7908ed0cf31a955da3a8d796b0422a2992facea351c525048f', 1, 0)]
 E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
 
 .venv_backend/lib/python3.10/site-packages/sqlalchemy/engine/default.py:945: OperationalError
 ----------------------------- Captured stderr call -----------------------------
-2025-04-16 16:23:49 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 14:23:49.066345+00:00
+2025-04-16 17:18:41 | modules.api.auth.functions | INFO | Token d'accès créé avec expiration à : 2025-04-23 15:18:41.007463+00:00
 =============================== warnings summary ===============================
 .venv_backend/lib/python3.10/site-packages/pydantic/_internal/_config.py:323
   /Users/mathieu/Documents/Alternance_IA/Projet_groupe/SecureApi/backend/.venv_backend/lib/python3.10/site-packages/pydantic/_internal/_config.py:323: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
@@ -325,4 +327,4 @@ E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
 =========================== short test summary info ============================
 FAILED tests/test_auth.py::test_authenticate_user_success - assert False is n...
 FAILED tests/test_auth.py::test_refresh_route_works - sqlalchemy.exc.Operatio...
-==================== 2 failed, 7 passed, 1 warning in 1.64s ====================
+==================== 2 failed, 7 passed, 1 warning in 1.71s ====================

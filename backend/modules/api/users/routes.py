@@ -21,7 +21,8 @@ users_router = APIRouter()
     response_model=UserResponse,
     summary="Récupérer un utilisateur par son ID",
     description="Retourne les informations d'un utilisateur "
-    "spécifique en fonction de son ID.")
+    "spécifique en fonction de son ID.",
+)
 def get_user(user_id: int, db: Session = Depends(get_users_db)):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -32,5 +33,5 @@ def get_user(user_id: int, db: Session = Depends(get_users_db)):
         name=user.name,
         email=user.email,
         is_active=user.is_active,
-        role=user.role.role
+        role=user.role.role,
     )

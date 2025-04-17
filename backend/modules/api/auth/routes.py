@@ -20,6 +20,7 @@ from modules.api.users.functions import get_user_by_email
 from modules.api.auth.functions import find_refresh_token
 from modules.api.auth.security import anonymize, hash_password, hash_token
 from fastapi.responses import JSONResponse
+from uuid import uuid4
 
 load_dotenv()
 
@@ -35,7 +36,7 @@ oauth2_scheme = OAuth2PasswordBearer(
     scopes={
         "me": "Voir ses informations personnelles",
         "admin": "Accès aux opérations administratives",
-    }
+    },
 )
 
 auth_router = APIRouter()
@@ -46,8 +47,8 @@ auth_router = APIRouter()
     response_model=Token,
     summary="Connexion et génération d'un token JWT",
     description="Vérifie les informations de connexion et retourne "
-    "un token d'authentification JWT si les identifiants sont corrects.")
-
+    "un token d'authentification JWT si les identifiants sont corrects.",
+)
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_users_db),
@@ -79,23 +80,25 @@ def login_for_access_token(
     hashed_token = hash_token(refresh_token)
     store_refresh_token(db, user.id, hashed_token, refresh_expiry)
 
-    return JSONResponse({
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer",
-    })
+    return JSONResponse(
+        {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+        }
+    )
 
 
-@auth_router.post(
-    "/refresh",
-    response_model=Token,
-    summary="Rafraîchir un token JWT d'accès",
-    description="Permet de générer un nouveau token d'accès à partir d'un token de rafraîchissement valide."
-    "Le token de rafraîchissement doit contenir le type 'refresh' pour être accepté.",
-)
+@auth_router.post("/refresh",
+                  response_model=Token,
+                  summary="Rafraîchir un token JWT d'accès",
+                  description="Permet de générer un nouveau token d'accès à partir d'un token de rafraîchissement valide. " # noqa
+                  "Le token de rafraîchissement doit contenir le type 'refresh' pour être accepté.", # noqa
+                  )
 def refresh_token(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_users_db)
 ):
+    # 🔐 Décode le token JWT
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
@@ -108,32 +111,62 @@ def refresh_token(
     except JWTError:
         raise HTTPException(status_code=401, detail="Token non valide")
 
-    # Vérifie si le token est encore en base
+    # 🔍 Vérifie que le token existe bien en base
     hashed_token = hash_token(token)
+    print("\n================ DEBUG /auth/refresh ================")
+    print(" Token JWT reçu :", token)
+    print(" Token hashé :", hashed_token)
+    print(" Tous les tokens en base :")
+    for rt in db.query(RefreshToken).all():
+        print("-", rt.token)
+    print("=====================================================\n")
+
     refresh_token_db = find_refresh_token(db, hashed_token)
 
-    if not refresh_token_db or refresh_token_db.expires_at < datetime.now(timezone.utc):
+    if not refresh_token_db:
+        print("❌ Token introuvable dans la base.")
         raise HTTPException(
-            status_code=401, detail="Refresh token expiré ou introuvable"
-        )
+            status_code=401,
+            detail="Refresh token introuvable")
 
-    # On recrée un nouvel access token court
+    if refresh_token_db.expires_at.replace(tzinfo=timezone.utc) < datetime.now(
+        timezone.utc
+    ):
+        print("⏳ Token expiré :", refresh_token_db.expires_at)
+        raise HTTPException(status_code=401, detail="Refresh token expiré")
+
+    print("✅ Token valide, on passe à la rotation...")
+
+    # Révoquer l'ancien refresh token
+    refresh_token_db.revoked = True
+
+    # Récupère l'utilisateur en base via email anonymisé
+    hashed_email = anonymize(email)
+    user = get_user_by_email(hashed_email, db)
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    # Crée un nouveau access token
     new_access_token = create_access_token(
         data={"sub": email, "role": role}, expires_delta=timedelta(minutes=15)
     )
 
-    # Générer également un nouveau refresh token
+    # Crée un nouveau refresh token
     new_refresh_token = create_access_token(
-        data={"sub": email, "role": role, "type": "refresh"},
-        expires_delta=timedelta(days=7),
-    )
-
-    # Sauvegarder le nouveau refresh token
-    refresh_expiry = datetime.now(timezone.utc) + timedelta(days=7)
+        data={
+            "sub": email, "role": role, "type": "refresh", "jti": str(
+                uuid4())}, expires_delta=timedelta(
+            days=7), )
     hashed_new_refresh_token = hash_token(new_refresh_token)
+    refresh_expiry = datetime.now(timezone.utc) + timedelta(days=7)
+
     store_refresh_token(
-        db, user_id=email, token=hashed_new_refresh_token, expires_at=refresh_expiry
-    )
+        db,
+        user_id=user.id,
+        token=hashed_new_refresh_token,
+        expires_at=refresh_expiry)
+
+    db.commit()
 
     return JSONResponse(
         {
@@ -144,11 +177,11 @@ def refresh_token(
     )
 
 
-@auth_router.get(
-    "/users/me",
-    response_model=UserResponse,
-    summary="Récupérer les informations de l'utilisateur connecté",
-    description="Retourne les détails de l'utilisateur authentifié en utilisant son token.")
+@auth_router.get("/users/me",
+                 response_model=UserResponse,
+                 summary="Récupérer les informations de l'utilisateur connecté", # noqa
+                 description="Retourne les détails de l'utilisateur authentifié en utilisant son token.", # noqa
+                 )
 def read_users_me(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_users_db)
 ):
@@ -196,10 +229,9 @@ def read_users_me(
         raise credentials_exception
 
 
-@auth_router.get(
-    "/users/",
-    response_model=list[UserResponse],
-    summary="Lister tous les utilisateurs")
+@auth_router.get("/users/",
+                 response_model=list[UserResponse],
+                 summary="Lister tous les utilisateurs")
 def get_all_users(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_users_db)
 ):
@@ -227,14 +259,17 @@ def get_all_users(
         ]
 
     except JWTError:
-        raise HTTPException(status_code=401, detail="Token invalide ou expiré.")
+        raise HTTPException(
+            status_code=401,
+            detail="Token invalide ou expiré.")
 
 
 @auth_router.delete(
     "/users/{user_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Supprimer un utilisateur",
-    description="Supprime un utilisateur spécifique en fonction de son ID.")
+    description="Supprime un utilisateur spécifique en fonction de son ID.",
+)
 def delete_user(
     user_id: int,
     token: str = Depends(oauth2_scheme),
@@ -243,7 +278,8 @@ def delete_user(
     """Seuls les administrateurs peuvent supprimer un utilisateur."""
 
     try:
-        # Décodage du token JWT pour obtenir l'email de l'utilisateur qui fait la requête
+        # Décodage du token JWT pour obtenir l'email de l'utilisateur qui fait
+        # la requête
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         role = payload.get("role")
 
@@ -257,7 +293,9 @@ def delete_user(
         # Suppression de l'utilisateur
         user_to_delete = db.query(User).filter(User.id == user_id).first()
         if not user_to_delete:
-            raise HTTPException(status_code=404, detail="Utilisateur non trouvé.")
+            raise HTTPException(
+                status_code=404,
+                detail="Utilisateur non trouvé.")
 
         db.delete(user_to_delete)
         db.commit()
@@ -265,7 +303,9 @@ def delete_user(
         return JSONResponse({"message": "Utilisateur supprimé"})
 
     except JWTError:
-        raise HTTPException(status_code=401, detail="Token invalide ou expiré.")
+        raise HTTPException(
+            status_code=401,
+            detail="Token invalide ou expiré.")
 
 
 @auth_router.post(
@@ -290,7 +330,8 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_users_db)):
     # Récupérer le rôle par défaut
     role_obj = db.query(Role).filter_by(role="reader").first()
     if not role_obj:
-        raise HTTPException(status_code=500, detail="Le rôle 'reader' est introuvable")
+        raise HTTPException(status_code=500,
+                            detail="Le rôle 'reader' est introuvable")
 
     # Créer un nouvel utilisateur
     new_user = User(
@@ -317,7 +358,8 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_users_db)):
 @auth_router.patch(
     "/users/{user_id}/role",
     summary="Modifier le rôle d'un utilisateur",
-    description="Permet à un administrateur de modifier le rôle d'un utilisateur.")
+    description="Permet à un administrateur de modifier le rôle d'un utilisateur.", # noqa
+)
 def update_user_role(
     user_id: int,
     role_update: RoleUpdate,
@@ -331,8 +373,8 @@ def update_user_role(
 
         if role != "admin":
             raise HTTPException(
-                status_code=403, detail="Accès refusé : réservé aux administrateurs."
-            )
+                status_code=403,
+                detail="Accès refusé : réservé aux administrateurs.")
 
         # Récupérer l'utilisateur cible
         user = db.query(User).filter(User.id == user_id).first()
@@ -351,7 +393,11 @@ def update_user_role(
         db.commit()
         db.refresh(user)
 
-        return JSONResponse({"message": f"Rôle de l'utilisateur mis à jour en '{new_role.role}'."})
+        return JSONResponse(
+            {"message": f"Rôle de l'utilisateur mis à jour en '{new_role.role}'."} # noqa
+        )
 
     except JWTError:
-        raise HTTPException(status_code=401, detail="Token invalide ou expiré.")
+        raise HTTPException(
+            status_code=401,
+            detail="Token invalide ou expiré.")
