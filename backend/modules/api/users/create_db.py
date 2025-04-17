@@ -2,11 +2,11 @@ import os
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 
-from utils.security import anonymize, hash_password
+from modules.api.auth.security import anonymize, hash_password
 from utils.logger_config import configure_logger
-from modules.api.users.models import User, Base, Role
+from modules.api.users.models import User, Role
 from modules.database.config import USERS_DATABASE_PATH
-from modules.database.session import users_engine, UsersSessionLocal
+from modules.database.session import users_engine, UsersSessionLocal, Base
 
 # Configuration du logger
 logger = configure_logger()
@@ -21,8 +21,7 @@ def init_users_db():
 
     if not db_exists:
         logger.info(
-            "La base de données 'users' n'existe pas. Création en cours..."
-        )
+            "La base de données 'users' n'existe pas. Création en cours...")
         Base.metadata.create_all(bind=users_engine)
         logger.info("Base de données 'users' créée avec succès.")
         create_roles_and_first_users()
@@ -49,9 +48,11 @@ def create_roles_and_first_users():
         if not admin_role:
             raise ValueError("Le rôle 'admin' n'existe pas")
 
-        existing_admin = db.query(User).filter(User.role_id == admin_role.id).first()
+        existing_admin = db.query(User).filter(
+            User.role_id == admin_role.id).first()
         if existing_admin:
-            logger.info("Un administrateur existe déjà. Aucune action nécessaire.")
+            logger.info(
+                "Un administrateur existe déjà. Aucune action nécessaire.")
             return
 
         # Récupération depuis le .env

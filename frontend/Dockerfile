@@ -1,12 +1,13 @@
 # Utiliser une image Python de base plus récente
-FROM python:alpine
+FROM python:3.13-slim
+
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
 # Copier les fichiers requirements.txt et installer les dépendances
-COPY requirements.txt .
+COPY requirements_frontend.txt .
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements_frontend.txt
 
 # Copier le reste du code de l'application dans le conteneur
 COPY . .

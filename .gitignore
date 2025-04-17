@@ -19,7 +19,7 @@ Local files/
 # Dockerfile
 .dockerignore
 
-# Environnement virtuel
+# Environnements virtuels
 .venv/
 
 # Fichiers générés

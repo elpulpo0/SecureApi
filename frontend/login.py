@@ -1,5 +1,3 @@
-# 📁 frontend/login.py
-
 import streamlit as st
 from utils import authenticate_user, create_user
 

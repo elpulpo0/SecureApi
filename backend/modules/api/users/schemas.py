@@ -22,7 +22,7 @@ class UserResponse(BaseModel):
 
 # Modèle pour mettre à jour un rôle
 class RoleUpdate(BaseModel):
-    role_id: str
+    role: str
 
 
 class Token(BaseModel):

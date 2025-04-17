@@ -8,6 +8,11 @@ def anonymize(name: str) -> str:
     return hashlib.sha256(name.encode("utf-8")).hexdigest()
 
 
+# Fonction pour anonymiser le refresh token via hachage SHA256
+def hash_token(token: str) -> str:
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
 # Fonction pour hacher un mot de passe avec bcrypt
 def hash_password(password: str) -> str:
     """Hache un mot de passe avec bcrypt."""

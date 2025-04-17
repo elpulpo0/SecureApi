@@ -3,7 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
 from modules.api.users.routes import users_router
+from modules.api.auth.routes import auth_router
 from modules.api.users.create_db import init_users_db
+import os
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement
+load_dotenv()
+
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 # Initialisation de la base de données utilisateurs
 init_users_db()
@@ -18,8 +26,9 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",  # Port par défaut pour VueJs
-        "http://localhost:8501",  # Port par défaut pour Streamlit
+        "http://localhost:5173",  # Port par défaut pour VueJs en local
+        "http://localhost:8501",  # Port par défaut pour Streamlit en local
+        "http://frontend:8501",
     ],
     allow_credentials=True,
     allow_methods=["*"],  # Autoriser toutes les méthodes (GET, POST, etc.)
@@ -28,8 +37,9 @@ app.add_middleware(
 
 router = APIRouter()
 
-# Inclusion des routes existantes (ici, les routes liées aux utilisateurs)
-router.include_router(users_router)
+# Inclusion des routes existantes
+router.include_router(auth_router, prefix="/auth", tags=["Authentification"])
+router.include_router(users_router, prefix="/users", tags=["Users"])
 
 # Inclusion du router dans l'application principale
 app.include_router(router)

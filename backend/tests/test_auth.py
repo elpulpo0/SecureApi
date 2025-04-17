@@ -1,51 +1,79 @@
-import pytest
 import os
+import pytest
+from datetime import timedelta, timezone, datetime
+from jose import jwt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from datetime import timedelta
-from jose import jwt
-from modules.api.users.create_db import Base, User
-from utils.security import hash_password, anonymize
-from modules.api.users.functions import (
+from sqlalchemy import inspect
+from modules.database.session import Base
+from modules.api.main import app
+from modules.database.dependencies import get_users_db
+from modules.api.users.models import RefreshToken, Role
+from modules.api.users.create_db import User
+from modules.api.auth.security import hash_password, anonymize, hash_token
+from modules.api.users.functions import get_user_by_email
+from modules.api.auth.functions import (
     create_access_token,
     authenticate_user,
-    get_user_by_email,
+    store_refresh_token,
+    find_refresh_token,
 )
+from fastapi.testclient import TestClient
+from utils.logger_config import configure_logger
+from dotenv import load_dotenv
 
-# Setup variables d'env
+# Logger
+logger = configure_logger()
+
+load_dotenv()
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
-# Configuration DB de test (SQLite in-memory)
+# In-memory SQLite
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
-TestingSessionLocal = sessionmaker(
-    autocommit=False, autoflush=False, bind=engine
-)
+TestingSessionLocal = sessionmaker(bind=engine)
 
 
-# Fixture de base de données
+# Fixture DB
 @pytest.fixture(scope="function")
 def db():
+    _ = [RefreshToken, Role]
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
-    yield db
-    db.close()
-    Base.metadata.drop_all(bind=engine)
+    try:
+        yield db
+    finally:
+        db.close()
+        Base.metadata.drop_all(bind=engine)
 
 
-# Fixture utilisateur
+# Fixture client
+@pytest.fixture
+def client_with_override(db):
+    def override_get_db():
+        yield db
+
+    app.dependency_overrides[get_users_db] = override_get_db
+    client = TestClient(app)
+    yield client
+    app.dependency_overrides.clear()
+
+
 @pytest.fixture
 def test_user(db):
-    email = "test@example.com"
+    import uuid
+
+    unique_email = f"test_{uuid.uuid4()}@example.com"
     name = "test"
     password = "testpass123"
     hashed_password = hash_password(password)
 
     user = User(
-        email=anonymize(email),
+        email=anonymize(unique_email),
         name=name,
         password=hashed_password,
         role_id="user",
@@ -54,10 +82,16 @@ def test_user(db):
     db.add(user)
     db.commit()
     db.refresh(user)
+
+    user.email_plain = unique_email  # 👈 ajoute le mail clair pour les tests
     return user
 
 
-# 🔹 TESTS
+def test_sanity_check_tables(db):
+    inspector = inspect(db.get_bind())
+    tables = inspector.get_table_names()
+    print("🧪 Tables détectées :", tables)
+    assert "refresh_tokens" in tables
 
 
 def test_get_user_by_email_found(db, test_user):
@@ -72,7 +106,7 @@ def test_get_user_by_email_not_found(db):
 
 
 def test_authenticate_user_success(db, test_user):
-    user = authenticate_user(db, "test@example.com", "testpass123")
+    user = authenticate_user(db, test_user.email_plain, "testpass123")
     assert user is not False
 
 
@@ -92,3 +126,79 @@ def test_create_access_token():
     decoded = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     assert decoded["sub"] == "user_id"
     assert "exp" in decoded
+
+
+def create_test_user(db, email: str):
+    user = User(
+        email=anonymize(email),
+        name="test",
+        password=hash_password("testpass123"),
+        role_id="user",
+        is_active=True,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+def test_refresh_token_hashing(db):
+    email = "testhashing@example.com"
+    user = create_test_user(db, email)
+    original_refresh_token = create_access_token(
+        data={"sub": email, "role": "user", "type": "refresh"},
+        expires_delta=timedelta(days=7),
+    )
+    hashed_token = hash_token(original_refresh_token)
+    expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+    store_refresh_token(db, user.id, hashed_token, expires_at)
+
+    refresh_token_db = find_refresh_token(db, hashed_token)
+    assert refresh_token_db is not None
+    assert refresh_token_db.token == hashed_token
+
+
+def test_refresh_route_works(db, client_with_override):
+    import uuid
+
+    email = f"testrefresh_{uuid.uuid4()}@example.com"  # unique à chaque test
+    user = create_test_user(db, email)
+
+    refresh_token = create_access_token(
+        data={"sub": email, "role": "user", "type": "refresh"},
+        expires_delta=timedelta(days=7),
+    )
+    hashed_token = hash_token(refresh_token)
+    expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+
+    store_refresh_token(db, user.id, hashed_token, expires_at)
+    db.commit()
+
+    print("✅ Refresh token stocké pour :", user.id)
+
+    response = client_with_override.post(
+        "/auth/refresh",
+        headers={"Authorization": f"Bearer {refresh_token}"},
+    )
+
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert "access_token" in data
+    assert "refresh_token" in data
+
+
+def test_refresh_token_validity(db, test_user):
+    refresh_token = create_access_token(
+        data={"sub": test_user.email, "role": "user", "type": "refresh"},
+        expires_delta=timedelta(days=7),
+    )
+    hashed_token = hash_token(refresh_token)
+    expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+    store_refresh_token(db, test_user.id, hashed_token, expires_at)
+
+    refresh_token_db = find_refresh_token(db, hashed_token)
+    assert refresh_token_db is not None
+    assert refresh_token_db.token == hashed_token
+    assert refresh_token_db.expires_at.replace(
+        tzinfo=timezone.utc) > datetime.now(
+        timezone.utc)
