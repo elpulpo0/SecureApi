@@ -1,16 +1,18 @@
-# 📁 frontend/utils.py
-
 import requests
 import streamlit as st
+from dotenv import load_dotenv
+import os
 
-API_URL = "http://backend:8000"
+load_dotenv()
+
+BACKEND_URL = os.getenv("BACKEND_URL")
 
 def authenticate_user(email, password):
-    response = requests.post(f"{API_URL}/auth/login", data={"username": email, "password": password})
+    response = requests.post(f"{BACKEND_URL}/auth/login", data={"username": email, "password": password})
     if response.status_code == 200:
         token = response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
-        user_response = requests.get(f"{API_URL}/auth/users/me", headers=headers)
+        user_response = requests.get(f"{BACKEND_URL}/auth/users/me", headers=headers)
         if user_response.status_code == 200:
             user_data = user_response.json()
             return {"role": user_data["role"], "token": token}
@@ -18,7 +20,7 @@ def authenticate_user(email, password):
 
 
 def create_user(name, email, password):
-    response = requests.post(f"{API_URL}/auth/users/", json={"name": name, "email": email, "password": password})
+    response = requests.post(f"{BACKEND_URL}/auth/users/", json={"name": name, "email": email, "password": password})
     if response.status_code == 201:
         return True, "Compte créé"
     elif response.status_code == 400:
@@ -28,7 +30,7 @@ def create_user(name, email, password):
 
 def get_users(token):
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(f"{API_URL}/auth/users/", headers=headers)
+    response = requests.get(f"{BACKEND_URL}/auth/users/", headers=headers)
     return response.json() if response.status_code == 200 else []
 
 

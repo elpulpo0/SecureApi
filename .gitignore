@@ -20,8 +20,7 @@ Local files/
 .dockerignore
 
 # Environnements virtuels
-.venv_frontend/
-.venv_backend/
+.venv/
 
 # Fichiers générés
 backend/db/*

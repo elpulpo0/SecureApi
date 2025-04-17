@@ -20,9 +20,12 @@ from modules.api.auth.functions import (
 )
 from fastapi.testclient import TestClient
 from utils.logger_config import configure_logger
+from dotenv import load_dotenv
 
 # Logger
 logger = configure_logger()
+
+load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
