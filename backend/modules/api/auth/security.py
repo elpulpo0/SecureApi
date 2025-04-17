@@ -30,20 +30,3 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Vérifie si le mot de passe en clair correspond au mot de passe haché avec bcrypt."""
     return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
-
-
-def test_create_first_users_creates_admin_if_not_exists(monkeypatch, db):
-    from modules.api.users.create_db import create_first_users
-
-    monkeypatch.setenv("ADMIN_EMAIL", "admin@example.com")
-    monkeypatch.setenv("ADMIN_PASSWORD", "adminpass")
-
-    create_first_users()
-
-    from modules.api.users.functions import anonymize, get_user_by_email
-
-    email_hashed = anonymize("admin@example.com")
-
-    user = get_user_by_email(email_hashed, db)
-    assert user is not None
-    assert user.role == "admin"

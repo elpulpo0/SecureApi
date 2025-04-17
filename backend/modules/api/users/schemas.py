@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, constr
+from typing import List
 
 
 # Modèle Pydantic pour validation
@@ -31,4 +32,7 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    email: str | None = None
+    sub: str  # L'identifiant de l'utilisateur (l'email)
+    exp: int  # La date d'expiration du token
+    role: str  # Le rôle de l'utilisateur
+    scopes: List[str]  # Les permissions (scopes)

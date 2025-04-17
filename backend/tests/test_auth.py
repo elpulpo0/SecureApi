@@ -13,7 +13,7 @@ from modules.api.users.create_db import User
 from modules.api.auth.security import hash_password, anonymize, hash_token
 from modules.api.users.functions import get_user_by_email
 from modules.api.auth.functions import (
-    create_access_token,
+    create_token,
     authenticate_user,
     store_refresh_token,
     find_refresh_token,
@@ -122,7 +122,7 @@ def test_authenticate_user_not_found(db):
 
 def test_create_access_token():
     data = {"sub": "user_id"}
-    token = create_access_token(data, expires_delta=timedelta(minutes=30))
+    token = create_token(data, expires_delta=timedelta(minutes=30))
     decoded = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     assert decoded["sub"] == "user_id"
     assert "exp" in decoded
@@ -145,7 +145,7 @@ def create_test_user(db, email: str):
 def test_refresh_token_hashing(db):
     email = "testhashing@example.com"
     user = create_test_user(db, email)
-    original_refresh_token = create_access_token(
+    original_refresh_token = create_token(
         data={"sub": email, "role": "user", "type": "refresh"},
         expires_delta=timedelta(days=7),
     )
@@ -164,7 +164,7 @@ def test_refresh_route_works(db, client_with_override):
     email = f"testrefresh_{uuid.uuid4()}@example.com"  # unique à chaque test
     user = create_test_user(db, email)
 
-    refresh_token = create_access_token(
+    refresh_token = create_token(
         data={"sub": email, "role": "user", "type": "refresh"},
         expires_delta=timedelta(days=7),
     )
@@ -188,7 +188,7 @@ def test_refresh_route_works(db, client_with_override):
 
 
 def test_refresh_token_validity(db, test_user):
-    refresh_token = create_access_token(
+    refresh_token = create_token(
         data={"sub": test_user.email, "role": "user", "type": "refresh"},
         expires_delta=timedelta(days=7),
     )
