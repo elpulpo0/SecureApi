@@ -82,7 +82,7 @@ BACKEND_URL=http://localhost:8000
 
 - Terminal 1 :
 ```bash
-cd backend && uvicorn modules.api.main:app --reload
+cd backend && uvicorn run:app --reload
 ```
 - Terminal 2 :
 ```bash
