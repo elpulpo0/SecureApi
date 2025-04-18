@@ -23,7 +23,7 @@ def authenticate_user(email, password):
 
 def create_user(name, email, password):
     response = requests.post(f"{BACKEND_URL}/auth/users/", json={"name": name, "email": email, "password": password})
-    if response.status_code == 201:
+    if response.ok:
         return True, "Compte créé"
     elif response.status_code == 400:
         return False, response.json().get("detail", "Erreur 400")
