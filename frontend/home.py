@@ -1,4 +1,3 @@
-
 import streamlit as st
 import datetime
 from utils import get_user_count
@@ -38,6 +37,9 @@ def home_page():
 
             st.metric("Utilisateurs inscrits", user_count)
             st.metric("Tokens actifs", token_count)
-            st.metric("Dernière connexion", datetime.datetime.now().strftime("%d/%m/%Y à %H:%M"))
+            st.metric(
+                "Dernière connexion",
+                datetime.datetime.now().strftime("%d/%m/%Y à %H:%M"),
+            )
 
             st.caption("Le nombre d'utilisateurs est à jour, les autres stats arrivent !")
