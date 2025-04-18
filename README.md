@@ -23,30 +23,33 @@
 ```bash
 SecureAPI/
 ├── backend/
-│   ├── db/                    # Données / fichiers SQLite
-│   ├── logs/                  # Logs applicatifs
-│   ├── modules/               # Code métier organisé (auth, users, etc.)
-│   ├── tests/                 # Tous les tests Pytest
-│   ├── utils/                 # Utilitaires transverses
-│   ├── Dockerfile             # Image Docker du backend
-│   └── requirements_backend.txt
+│   ├── db/                            # Fichiers SQLite
+│   ├── logs/                          # Logs applicatifs
+│   ├── modules/
+│   │   ├── api/                       # Fichiers de gestions FastAPI
+│   │   ├── database/                  # Fichiers pour l'initialisation de la base de donnée
+│   ├── tests/                         # Tous les tests Pytest
+│   ├── utils/                         # Utilitaires transverses
+│   ├── Dockerfile                     # Image Docker du backend
+│   ├── requirements_backend.txt       # Dépendances du backend
+│   └── run.py                         # Point d'entrée de l'application FastAPI
 ├── frontend/
-│   ├── home.py / login.py     # Pages Streamlit
-│   ├── main.py                # Entrée de l'app Streamlit
-│   ├── Dockerfile             # Image Docker du frontend
-│   └── requirements_frontend.txt
-├── docker-compose.yml         # Orchestration backend + frontend
-├── .env / .env_example        # Variables d’environnement
-├── requirements.txt           # Toutes les dépendances
-└── README.md                  # Ce fichier
+│   ├── home.py / login.py / users.py  # Pages Streamlit
+│   ├── main.py                        # Entrée de l'app Streamlit
+│   ├── Dockerfile                     # Image Docker du frontend
+│   └── requirements_frontend.txt      # Dépendances du frontend
+├── docker-compose.yml                 # Orchestration backend + frontend
+├── .env / .env_example                # Variables d’environnement
+├── requirements.txt                   # Toutes les dépendances
+└── README.md                          # Ce fichier
 ```
 
 ## Démarrage rapide
 
 1. Cloner le projet
 ```bash
-git clone https://github.com/<votre-org>/SecureAPI.git
-cd SecureAPI
+git clone https://github.com/elpulpo0/SecureApi.git
+cd SecureApi
 ```
 
 2. Créer un environnement virtuel
@@ -69,13 +72,13 @@ pip freeze > requirements.txt
 
 4. Configurer l’environnement
 Copier le fichier `.env_example` en `.env` et le remplir :
-```env
+
+```sh
 SECRET_KEY= # Clé pour hasher les tokens
 ADMIN_NAME=example
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=password123
-PORT_BACK=8000
-BACKEND_URL=http://localhost:8000
+PORT_BACK=8000 # Nécessaire dans le docker compose
 ```
 
 ## Lancer l'application
@@ -91,7 +94,7 @@ cd frontend && streamlit run main.py
 
 ## Ajouter une base de donnée supplémentaire (optionnel)
 
-Dans `backend/modules/database/config.py`, `dependancies.py` et `session.py`, ajoutez la deuxième base pour correspondre au projet actuel. Créez un dossier dédié en parallèle du dossier `users` puis ajustez les imports correspondants dans `backend/modules/api/main.py`.
+Dans `backend/modules/database/config.py`, `dependencies.py` et `session.py`, ajoutez la deuxième base pour correspondre au projet actuel. Créez un dossier dédié en parallèle du dossier `users` puis ajustez les imports correspondants dans `backend/modules/api/main.py`.
 
 ## Lancer avec Docker (recommandé)
 ```bash
@@ -138,14 +141,14 @@ pip freeze > requirements.txt
 
 ## Stack technique
 
-| Outil        | Rôle                    |
-|--------------|--------------------------|
-| FastAPI      | API backend REST         |
-| Streamlit    | Interface utilisateur    |
-| SQLAlchemy   | ORM pour les modèles     |
+| Outil        | Rôle                       |
+|--------------|----------------------------|
+| FastAPI      | API backend REST           |
+| Streamlit    | Interface utilisateur      |
+| SQLAlchemy   | ORM pour les modèles       |
 | SQLite       | Base de données légère     |
-| Pytest       | Framework de test        |
-| Docker       | Conteneurisation         |
+| Pytest       | Framework de test          |
+| Docker       | Conteneurisation           |
 | JWT / bcrypt | Authentification sécurisée |
 
 ## 🛡️ Sécurité
