@@ -16,13 +16,14 @@ def login_page():
                 st.session_state["authenticated"] = True
                 st.session_state["role"] = user["role"]
                 st.session_state["token"] = user["token"]
+                st.session_state["user"] = user.get("name", email)
                 st.rerun()
             else:
                 st.error("Identifiants incorrects")
 
     with tab2:
         st.subheader("Créer un compte")
-        name = st.text_input("Nom complet", key="signup_name")
+        name = st.text_input("Nom ou Pseudo", key="signup_name")
         signup_email = st.text_input("Email", key="signup_email")
         signup_password = st.text_input("Mot de passe", type="password", key="signup_password")
         confirm_password = st.text_input("Confirmer le mot de passe", type="password", key="confirm_password")

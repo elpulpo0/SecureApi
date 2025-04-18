@@ -2,6 +2,8 @@ import streamlit as st
 from login import login_page
 from home import home_page
 from users import users_page
+from edit_user import edit_user_page
+from delete_user import delete_user_page
 from utils import logout
 
 # 🔹 Initialisation de la session
@@ -14,24 +16,31 @@ if "authenticated" not in st.session_state:
 if not st.session_state["authenticated"]:
     login_page()
 else:
+    # 🔹 Déconnexion
     if st.sidebar.button("🚪 Se déconnecter", key="logout"):
         logout()
 
+    # 🔹 Déclaration des pages disponibles
     PAGES = {
         "🏠 Accueil": home_page,
     }
 
     if st.session_state["role"] == "admin":
-        PAGES["👥 Utilisateurs"] = users_page
+        PAGES.update({
+            "👥 Utilisateurs": users_page,
+            "✏️ Modifier utilisateur": edit_user_page,
+            "❌ Supprimer utilisateur": delete_user_page,
+        })
 
+    # 🔹 Navigation
     selection = st.sidebar.radio("📍 Navigation", list(PAGES.keys()))
+
+    # 🔁 Redirection prioritaire
+    if "__page_override__" in st.session_state:
+        selection = st.session_state["__page_override__"]
+        print("🔁 Redirection forcée vers :", selection)  # DEBUG ICI ✅
+        del st.session_state["__page_override__"]
+
+    # 🔹 Affichage de la page
     PAGES[selection]()
-
-
-# 📁 frontend/home.py
-
-def home_page():
-    st.title("🏠 Bienvenue sur FastAPI Xtrem")
-    st.write("🔹 Sélectionnez une section dans la barre latérale pour commencer.")
-    if st.session_state["role"] == "admin":
-        st.write("✅ Vous avez un accès administrateur.")
+    st.write("🔍 Page en cours :", selection)
