@@ -6,12 +6,6 @@ import os
 from pathlib import Path
 env_path = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(dotenv_path=env_path)
-
-# DEBUG 🔍
-print("✅ Chargement de .env depuis :", env_path)
-print("✅ Fichier .env existe ? :", env_path.exists())
-print("✅ BACKEND_URL =", os.getenv("BACKEND_URL"))
-
 BACKEND_URL = os.getenv("BACKEND_URL") or "http://localhost:8000"
 
 

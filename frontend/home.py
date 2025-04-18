@@ -1,6 +1,5 @@
 
 import streamlit as st
-from PIL import Image
 import datetime
 from utils import get_user_count
 
@@ -20,7 +19,7 @@ def home_page():
 
     if st.session_state["role"] == "admin":
         st.markdown("---")
-        st.subheader("🛠️ Espace Administrateur")
+        st.subheader(" Espace Administrateur")
 
         col1, col2 = st.columns(2)
         with col1:
@@ -41,4 +40,4 @@ def home_page():
             st.metric("Tokens actifs", token_count)
             st.metric("Dernière connexion", datetime.datetime.now().strftime("%d/%m/%Y à %H:%M"))
 
-            st.caption("✨ Le nombre d'utilisateurs est à jour, les autres stats arrivent !")
+            st.caption("Le nombre d'utilisateurs est à jour, les autres stats arrivent !")
