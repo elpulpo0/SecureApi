@@ -30,6 +30,7 @@ else:
 
 # 📁 frontend/home.py
 
+
 def home_page():
     st.title("🏠 Bienvenue sur FastAPI Xtrem")
     st.write("🔹 Sélectionnez une section dans la barre latérale pour commencer.")
