@@ -15,7 +15,12 @@ if "authenticated" not in st.session_state:
 if not st.session_state["authenticated"]:
     login_page()
 else:
-    st.sidebar.markdown(f"👤 Connecté en tant que : **{st.session_state.get('user', 'Utilisateur inconnu')}**")
+    st.sidebar.markdown(
+        f"""
+        👤 Connecté en tant que :
+        **{st.session_state.get('user', 'Utilisateur inconnu')}**
+        """
+    )
     if st.sidebar.button("🚪 Se déconnecter", key="logout"):
         logout()
 
@@ -25,9 +30,11 @@ else:
     }
 
     if st.session_state["role"] == "admin":
-        PAGES.update({
-            "👥 Utilisateurs": users_page,
-        })
+        PAGES.update(
+            {
+                "👥 Utilisateurs": users_page,
+            }
+        )
 
     # 🔹 Navigation
     selection = st.sidebar.radio("📍 Navigation", list(PAGES.keys()))

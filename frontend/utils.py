@@ -9,7 +9,9 @@ BACKEND_URL = os.getenv("BACKEND_URL") or "http://localhost:8000"
 
 
 def authenticate_user(email, password):
-    response = requests.post(f"{BACKEND_URL}/auth/login", data={"username": email, "password": password})
+    response = requests.post(
+        f"{BACKEND_URL}/auth/login", data={"username": email, "password": password}
+    )
     if response.status_code == 200:
         token = response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -21,7 +23,10 @@ def authenticate_user(email, password):
 
 
 def create_user(name, email, password):
-    response = requests.post(f"{BACKEND_URL}/auth/users/", json={"name": name, "email": email, "password": password})
+    response = requests.post(
+        f"{BACKEND_URL}/auth/users/",
+        json={"name": name, "email": email, "password": password},
+    )
     if response.ok:
         return True, "Compte créé"
     elif response.status_code == 400:
@@ -42,11 +47,7 @@ def delete_user(user_id, token):
 
 def update_user(user_id, name, role, is_active, token):
     headers = {"Authorization": f"Bearer {token}"}
-    data = {
-        "name": name,
-        "role": role,
-        "is_active": is_active
-    }
+    data = {"name": name, "role": role, "is_active": is_active}
     return requests.put(f"{BACKEND_URL}/auth/users/{user_id}", json=data, headers=headers)
 
 
