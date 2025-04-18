@@ -28,5 +28,5 @@ def hash_password(password: str) -> str:
 
 # Fonction pour vérifier un mot de passe en utilisant bcrypt
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Vérifie si le mot de passe en clair correspond au mot de passe haché avec bcrypt."""
+    """Vérifie si le mot de passe en clair correspond au mot de passe haché."""
     return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())

@@ -95,9 +95,7 @@ def test_roles_creation(client, db_session):
     # Vérifier que les rôles existent dans la base de données
     roles = db_session.query(Role).all()
     assert len(roles) == 2, "Les rôles par défaut ne sont pas présents"
-    assert any(
-        role.role == "admin" for role in roles
-    ), "Le rôle 'admin' n'a pas été créé"
+    assert any(role.role == "admin" for role in roles), "Le rôle 'admin' n'a pas été créé"
     assert any(
         role.role == "reader" for role in roles
     ), "Le rôle 'reader' n'a pas été créé"
@@ -157,7 +155,5 @@ def test_login_failure_nonexistent_user(client):
 
 def test_refresh_token_invalid(client):
     """Test de refresh token invalide"""
-    response = client.post(
-        "/auth/refresh", headers={"Authorization": "Bearer faketoken"}
-    )
+    response = client.post("/auth/refresh", headers={"Authorization": "Bearer faketoken"})
     assert response.status_code == 401

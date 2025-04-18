@@ -157,7 +157,6 @@ def read_users_me(
 def get_all_users(
     current_user: dict = Depends(get_current_user), db: Session = Depends(get_users_db)
 ):
-    # Vérification que l'utilisateur actuel a les permissions nécessaires pour voir la liste des utilisateurs
     if "admin" not in current_user.scopes:
         raise HTTPException(
             status_code=403,
@@ -186,7 +185,6 @@ def delete_user(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_users_db),
 ):
-    # Vérification que l'utilisateur actuel a les permissions nécessaires pour supprimer un utilisateur
     if "admin" not in current_user.scopes:
         raise HTTPException(
             status_code=403,
@@ -247,7 +245,6 @@ def update_user_role(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_users_db),
 ):
-    # Vérification que l'utilisateur actuel a les permissions nécessaires pour modifier un rôle
     if "admin" not in current_user.scopes:
         raise HTTPException(
             status_code=403, detail="Accès refusé : réservé aux administrateurs."
@@ -256,9 +253,7 @@ def update_user_role(
     # Recherche de l'utilisateur à modifier dans la base de données
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
-        raise HTTPException(
-            status_code=404, detail="Utilisateur à modifier non trouvé."
-        )
+        raise HTTPException(status_code=404, detail="Utilisateur à modifier non trouvé.")
 
     # Recherche du nouveau rôle à assigner à l'utilisateur
     new_role = db.query(Role).filter(Role.role == role_update.role).first()

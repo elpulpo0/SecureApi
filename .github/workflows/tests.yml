@@ -28,11 +28,11 @@ jobs:
 
       - name: Format code with black
         run: |
-          black --line-length 99 .
+          black --line-length 90 .
 
       - name: Lint with flake8
         run: |
-          flake8 --max-line-length=100 .
+          flake8 --max-line-length=90 .
 
       - name: Run tests with pytest
         env:

@@ -96,7 +96,10 @@ def find_refresh_token(db: Session, provided_token: str) -> RefreshToken | None:
     )
     if refresh_token:
         logger.info(
-            f"Refresh token found: {refresh_token.token}, expires_at: {refresh_token.expires_at}"
+            f"""
+            Refresh token found: {refresh_token.token},
+            expires_at: {refresh_token.expires_at}
+            """
         )
     else:
         logger.warning("No refresh token found.")
