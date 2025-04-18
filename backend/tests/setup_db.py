@@ -1,4 +1,3 @@
-from modules.api.users.models import User, RefreshToken, Role
 from modules.database.session import Base
 import sys
 import os

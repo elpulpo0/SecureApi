@@ -3,15 +3,7 @@ from fastapi.testclient import TestClient
 from modules.api.main import create_app
 from modules.database.dependencies import get_users_db
 from modules.api.auth.security import hash_password, anonymize
-from datetime import timedelta, timezone, datetime
-from modules.api.auth.functions import (
-    store_refresh_token,
-    create_access_token,
-    hash_token,
-)
-from modules.api.users.functions import get_user_by_email
 from modules.api.users.models import User, Role
-from modules.api.auth.security import hash_password
 import uuid
 from utils.logger_config import configure_logger
 from tests.test_auth import create_test_user
@@ -120,6 +112,7 @@ def test_login_success(client, db_session):
     # Création de l'utilisateur de test
     unique_email = f"test_{uuid.uuid4()}@example.com"
     user = create_test_user(db_session, unique_email)
+    logger.debug(f"Created user: {unique_email, user.name}")
 
     # Connexion avec l'email et le mot de passe
     response = client.post(
@@ -134,9 +127,6 @@ def test_login_success(client, db_session):
     assert "access_token" in json_data
     assert "refresh_token" in json_data
     assert json_data["token_type"] == "bearer"
-
-    # Optionnel: Imprimer la réponse pour déboguer
-    logger.debug(json_data)
 
 
 def test_login_failure_wrong_password(client, db_session):
