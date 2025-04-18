@@ -1,12 +1,17 @@
 from modules.api.auth.security import verify_password, anonymize, hash_token
 from datetime import datetime, timedelta, timezone
-from jose import jwt
+from jose import JWTError, jwt
 import os
 from dotenv import load_dotenv
 from utils.logger_config import configure_logger
 from modules.api.users.functions import get_user_by_email
 from sqlalchemy.orm import Session
 from modules.api.users.models import RefreshToken
+from modules.api.users.schemas import TokenData
+from fastapi.security import SecurityScopes, OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, status
+from modules.database.dependencies import get_users_db
+from pydantic import ValidationError
 
 # Configuration du logger
 logger = configure_logger()
@@ -17,18 +22,42 @@ load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
+# Gestion de l'authentification avec OAuth2
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="auth/login",
+    scopes={
+        "me": "Voir ses informations personnelles",
+        "admin": "Accès aux opérations administratives",
+        "reader": "Accès en lecture aux ressources",
+    },
+)
 
-def create_access_token(data: dict, expires_delta: timedelta = None):
+def create_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (
         expires_delta if expires_delta else timedelta(minutes=60)
     )
-    to_encode.update({"exp": expire})
+
+    role = data.get("role")
+    scopes_map = {
+        "admin": ["admin"],
+        "reader": ["reader"]
+    }
+    scopes = scopes_map.get(role, [])
+
+    # Déterminer le type du token
+    token_type = data.get("type", "access")
+    to_encode["token_type"] = token_type
+
+    if token_type == "access":
+        to_encode["scopes"] = scopes
+
+    to_encode["exp"] = expire
 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    logger.info(f"Token d'accès créé avec expiration à : {expire}")
-
+    logger.info(f"Token {token_type} créé (scopes: {scopes}) – Expire à : {expire}")
     return encoded_jwt
+
 
 
 def authenticate_user(db: Session, email: str, password: str):
@@ -54,7 +83,11 @@ def authenticate_user(db: Session, email: str, password: str):
     return user
 
 
-def store_refresh_token(db: Session, user_id: int, token: str, expires_at: datetime):
+def store_refresh_token(
+        db: Session,
+        user_id: int,
+        token: str,
+        expires_at: datetime):
     refresh_token = RefreshToken(
         token=token,
         user_id=user_id,
@@ -64,10 +97,11 @@ def store_refresh_token(db: Session, user_id: int, token: str, expires_at: datet
     db.commit()
 
 
-def find_refresh_token(db: Session, provided_token: str) -> RefreshToken | None:
-    refresh_token = (
-        db.query(RefreshToken).filter(RefreshToken.token == provided_token).first()
-    )
+def find_refresh_token(
+        db: Session,
+        provided_token: str) -> RefreshToken | None:
+    refresh_token = (db.query(RefreshToken).filter(
+        RefreshToken.token == provided_token).first())
     if refresh_token:
         logger.info(
             f"Refresh token found: {refresh_token.token}, expires_at: {refresh_token.expires_at}"
@@ -79,3 +113,43 @@ def find_refresh_token(db: Session, provided_token: str) -> RefreshToken | None:
 
 def verify_token(provided_token: str, stored_hash: str) -> bool:
     return hash_token(provided_token) == stored_hash
+
+def get_current_user(
+    security_scopes: SecurityScopes, 
+    token: str = Depends(oauth2_scheme), 
+    db: Session = Depends(get_users_db)
+):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+    )
+
+    try:
+        # Décodage du token
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        token_data = TokenData(**payload)  # Validation Pydantic
+        email = token_data.sub
+        token_scopes = token_data.scopes
+
+    except JWTError:
+        raise credentials_exception
+    except ValidationError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Token payload validation error: {e.errors()}"
+        )
+
+    # Vérification des permissions
+    for scope in security_scopes.scopes:
+        if scope not in token_scopes:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not enough permissions",
+            )
+
+    # Recherche de l'utilisateur par email
+    user = get_user_by_email(email, db)
+    if not user:
+        raise credentials_exception
+
+    return token_data
