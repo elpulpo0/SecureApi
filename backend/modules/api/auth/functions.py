@@ -32,6 +32,7 @@ oauth2_scheme = OAuth2PasswordBearer(
     },
 )
 
+
 def create_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (
@@ -39,10 +40,7 @@ def create_token(data: dict, expires_delta: timedelta = None):
     )
 
     role = data.get("role")
-    scopes_map = {
-        "admin": ["admin"],
-        "reader": ["reader"]
-    }
+    scopes_map = {"admin": ["admin"], "reader": ["reader"]}
     scopes = scopes_map.get(role, [])
 
     # Déterminer le type du token
@@ -57,7 +55,6 @@ def create_token(data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     logger.info(f"Token {token_type} créé (scopes: {scopes}) – Expire à : {expire}")
     return encoded_jwt
-
 
 
 def authenticate_user(db: Session, email: str, password: str):
@@ -83,11 +80,7 @@ def authenticate_user(db: Session, email: str, password: str):
     return user
 
 
-def store_refresh_token(
-        db: Session,
-        user_id: int,
-        token: str,
-        expires_at: datetime):
+def store_refresh_token(db: Session, user_id: int, token: str, expires_at: datetime):
     refresh_token = RefreshToken(
         token=token,
         user_id=user_id,
@@ -97,11 +90,10 @@ def store_refresh_token(
     db.commit()
 
 
-def find_refresh_token(
-        db: Session,
-        provided_token: str) -> RefreshToken | None:
-    refresh_token = (db.query(RefreshToken).filter(
-        RefreshToken.token == provided_token).first())
+def find_refresh_token(db: Session, provided_token: str) -> RefreshToken | None:
+    refresh_token = (
+        db.query(RefreshToken).filter(RefreshToken.token == provided_token).first()
+    )
     if refresh_token:
         logger.info(
             f"Refresh token found: {refresh_token.token}, expires_at: {refresh_token.expires_at}"
@@ -114,10 +106,11 @@ def find_refresh_token(
 def verify_token(provided_token: str, stored_hash: str) -> bool:
     return hash_token(provided_token) == stored_hash
 
+
 def get_current_user(
-    security_scopes: SecurityScopes, 
-    token: str = Depends(oauth2_scheme), 
-    db: Session = Depends(get_users_db)
+    security_scopes: SecurityScopes,
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_users_db),
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -136,7 +129,7 @@ def get_current_user(
     except ValidationError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Token payload validation error: {e.errors()}"
+            detail=f"Token payload validation error: {e.errors()}",
         )
 
     # Vérification des permissions

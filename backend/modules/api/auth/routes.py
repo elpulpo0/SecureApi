@@ -16,7 +16,11 @@ from jose import JWTError, jwt
 from modules.api.users.schemas import UserResponse, UserCreate, RoleUpdate
 from modules.api.users.create_db import User, Role
 from modules.api.users.functions import get_user_by_email
-from modules.api.auth.functions import find_refresh_token, get_current_user, oauth2_scheme
+from modules.api.auth.functions import (
+    find_refresh_token,
+    get_current_user,
+    oauth2_scheme,
+)
 from modules.api.auth.security import anonymize, hash_password, hash_token
 from fastapi.responses import JSONResponse
 from uuid import uuid4
@@ -30,6 +34,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
 auth_router = APIRouter()
+
 
 @auth_router.post("/login", response_model=Token)
 def login_for_access_token(
@@ -90,11 +95,11 @@ def refresh_token(
     refresh_token_db = find_refresh_token(db, hashed_token)
 
     if not refresh_token_db:
-        raise HTTPException(
-            status_code=401,
-            detail="Refresh token introuvable")
+        raise HTTPException(status_code=401, detail="Refresh token introuvable")
 
-    if refresh_token_db.expires_at.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+    if refresh_token_db.expires_at.replace(tzinfo=timezone.utc) < datetime.now(
+        timezone.utc
+    ):
         raise HTTPException(status_code=401, detail="Refresh token expiré")
 
     refresh_token_db.revoked = True
@@ -109,14 +114,15 @@ def refresh_token(
     )
 
     new_refresh_token = create_token(
-        data={
-            "sub": email, "role": role, "type": "refresh", "jti": str(uuid4())
-        }, expires_delta=timedelta(days=7)
+        data={"sub": email, "role": role, "type": "refresh", "jti": str(uuid4())},
+        expires_delta=timedelta(days=7),
     )
     hashed_new_refresh_token = hash_token(new_refresh_token)
     refresh_expiry = datetime.now(timezone.utc) + timedelta(days=7)
 
-    store_refresh_token(db, user_id=user.id, token=hashed_new_refresh_token, expires_at=refresh_expiry)
+    store_refresh_token(
+        db, user_id=user.id, token=hashed_new_refresh_token, expires_at=refresh_expiry
+    )
 
     db.commit()
 
@@ -131,11 +137,10 @@ def refresh_token(
 
 @auth_router.get("/users/me", response_model=UserResponse)
 def read_users_me(
-    current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_users_db)
+    current_user: dict = Depends(get_current_user), db: Session = Depends(get_users_db)
 ):
     user = get_user_by_email(current_user.sub, db)
-    
+
     if not user:
         raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
 
@@ -150,8 +155,7 @@ def read_users_me(
 
 @auth_router.get("/users/", response_model=list[UserResponse])
 def get_all_users(
-    current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_users_db)
+    current_user: dict = Depends(get_current_user), db: Session = Depends(get_users_db)
 ):
     # Vérification que l'utilisateur actuel a les permissions nécessaires pour voir la liste des utilisateurs
     if "admin" not in current_user.scopes:
@@ -192,10 +196,7 @@ def delete_user(
     # Recherche de l'utilisateur à supprimer dans la base de données
     user_to_delete = db.query(User).filter(User.id == user_id).first()
     if not user_to_delete:
-        raise HTTPException(
-            status_code=404,
-            detail="Utilisateur non trouvé."
-        )
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé.")
 
     # Suppression de l'utilisateur
     db.delete(user_to_delete)
@@ -249,25 +250,20 @@ def update_user_role(
     # Vérification que l'utilisateur actuel a les permissions nécessaires pour modifier un rôle
     if "admin" not in current_user.scopes:
         raise HTTPException(
-            status_code=403,
-            detail="Accès refusé : réservé aux administrateurs."
+            status_code=403, detail="Accès refusé : réservé aux administrateurs."
         )
 
     # Recherche de l'utilisateur à modifier dans la base de données
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(
-            status_code=404, 
-            detail="Utilisateur à modifier non trouvé."
+            status_code=404, detail="Utilisateur à modifier non trouvé."
         )
 
     # Recherche du nouveau rôle à assigner à l'utilisateur
     new_role = db.query(Role).filter(Role.role == role_update.role).first()
     if not new_role:
-        raise HTTPException(
-            status_code=404, 
-            detail="Rôle non trouvé."
-        )
+        raise HTTPException(status_code=404, detail="Rôle non trouvé.")
 
     # Mise à jour du rôle de l'utilisateur
     user.role_id = new_role.id
