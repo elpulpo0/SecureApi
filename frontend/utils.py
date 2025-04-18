@@ -28,10 +28,13 @@ def create_user(name, email, password):
         json={"name": name, "email": email, "password": password},
     )
     if response.status_code == 201:
-        return True, "Compte créé"
-    elif response.status_code == 400:
-        return False, response.json().get("detail", "Erreur 400")
-    return False, "Erreur inconnue"
+
+        response = requests.post(f"{BACKEND_URL}/auth/users/", json={"name": name, "email": email, "password": password})
+        if response.ok:
+            return True, "Compte créé"
+        elif response.status_code == 400:
+            return False, response.json().get("detail", "Erreur 400")
+        return False, "Erreur inconnue"
 
 
 def get_users(token):
